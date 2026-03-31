@@ -165,36 +165,48 @@
     }
 
     /* ─── Numbered section cards ─────────────────────────────── */
-    .section-cards { display: flex; flex-direction: column; gap: 0; }
-
-    .section-card {
-      border-bottom: 1px solid var(--border);
-      padding: 40px 0;
+    .section-cards { display: flex; flex-direction: column; }
+    .section-card { padding: 40px 0; }
+    .section-card + .section-card { padding-top: 0; }
+    .section-card + .section-card > .container {
+      border-top: 1px solid var(--border);
+      padding-top: 40px;
     }
+    .section-card .container {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 48px; align-items: start;
+    }
+    .section-card .step-visual { margin-top: 0; }
     .section-card-inner {
-      display: grid;
-      grid-template-columns: 56px 1fr;
-      gap: 32px;
-      align-items: start;
+      display: grid; grid-template-columns: 56px 1fr;
+      gap: 32px; align-items: start;
     }
-    @media (max-width: 640px) {
-      .section-card-inner { grid-template-columns: 1fr; gap: 16px; }
+    @media (max-width: 900px) {
+      .section-card .container { grid-template-columns: 1fr; gap: 24px; }
     }
-    .section-card-num {
-      font-size: 0.75rem; font-weight: 500;
-      letter-spacing: 0.08em; color: var(--ink-3);
-      padding-top: 6px;
-    }
-    .section-card-body {}
+    @media (max-width: 640px) { .section-card-inner { grid-template-columns: 1fr; gap: 16px; } }
+    .section-card-num { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; color: var(--ink-3); padding-top: 6px; }
     .section-card-body h2 {
       font-size: clamp(1.4rem, 2.5vw, 1.875rem);
-      font-weight: 500;
-      letter-spacing: -0.025em;
-      line-height: 1.2;
-      margin-bottom: 16px;
+      font-weight: 500; letter-spacing: -0.025em; line-height: 1.2; margin-bottom: 16px;
     }
     .section-card-body p { font-size: 1rem; color: var(--ink-2); line-height: 1.75; }
     .section-card-body p + p { margin-top: 14px; }
+
+    /* ─── Step visual ────────────────────────────────────────── */
+    .step-visual {
+      border: 1px solid var(--border); border-radius: var(--radius-card);
+      background: var(--bg-card); aspect-ratio: 16/8;
+      overflow: hidden; position: relative;
+    }
+    .step-visual img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .step-visual img[src=""], .step-visual img:not([src]) { display: none; }
+    .step-visual-placeholder {
+      display: flex; position: absolute; inset: 0;
+      align-items: center; justify-content: center;
+      color: var(--ink-3); font-size: 0.8125rem;
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
 
     /* ─── Problem flow strip ──────────────────────────────────── */
     .flow-strip {
@@ -340,9 +352,10 @@
       border-bottom: 1px solid var(--border);
     }
     .results-chapter-title {
+      font-family: 'Fraunces', Georgia, serif;
       font-size: clamp(2rem, 5vw, 4rem);
-      font-weight: 500;
-      letter-spacing: -0.04em;
+      font-weight: 400;
+      letter-spacing: -0.03em;
       line-height: 1.05;
       margin-bottom: 56px;
     }
@@ -567,6 +580,10 @@
             <p>This created three critical issues: participants abandoned enrollment instead of returning to resolve issues, the resolution process was confusing and outdated, and manual reviews drove up operational costs significantly.</p>
           </div>
         </div>
+        <div class="step-visual">
+          <img src="" alt="The Problem visual" />
+          <div class="step-visual-placeholder">Image coming soon</div>
+        </div>
       </div>
     </div>
   </div>
@@ -592,6 +609,10 @@
             <p>As the market leader in student debt workplace benefits, Fidelity faced mounting pressure as enrollment rates dropped and operational costs threatened profitability. The business model — priced per enrolled participant — made every abandonment costly.</p>
             <p>But clients were also vocal about enrolling the <em>right</em> participants. The solution needed to guide users to correct documents, extract loan data automatically, and provide real-time feedback — all while getting to market quickly to meet key enrollment KPIs.</p>
           </div>
+        </div>
+        <div class="step-visual">
+          <img src="" alt="The Challenge visual" />
+          <div class="step-visual-placeholder">Image coming soon</div>
         </div>
       </div>
     </div>
@@ -619,6 +640,10 @@
             <p>Frequent touchpoints with technology and business partners kept momentum. Given the fast-moving environment, I ran a high-intensity discovery phase — auditing existing work, reviewing the competitive landscape, and exploring technical feasibility — simultaneously.</p>
           </div>
         </div>
+        <div class="step-visual">
+          <img src="" alt="Alignment and Strategy visual" />
+          <div class="step-visual-placeholder">Image coming soon</div>
+        </div>
       </div>
     </div>
 
@@ -635,6 +660,10 @@
               <div class="goal-item">Reduce drop-off and timeouts</div>
             </div>
           </div>
+        </div>
+        <div class="step-visual">
+          <img src="" alt="Our Goals visual" />
+          <div class="step-visual-placeholder">Image coming soon</div>
         </div>
       </div>
     </div>
@@ -669,6 +698,10 @@
             </div>
           </div>
         </div>
+        <div class="step-visual">
+          <img src="" alt="Research and Analysis visual" />
+          <div class="step-visual-placeholder">Image coming soon</div>
+        </div>
       </div>
     </div>
 
@@ -696,6 +729,10 @@
             <p>Through collaborative workshops with technical and business partners, we identified 3 key solutions to improve the user experience, meet internal goals, and address client concerns.</p>
             <p>Our vision was to guide users to correct documentation and provide immediate feedback when loan verification failed, while displaying extracted data to eliminate manual entry.</p>
           </div>
+        </div>
+        <div class="step-visual">
+          <img src="" alt="Vision visual" />
+          <div class="step-visual-placeholder">Image coming soon</div>
         </div>
       </div>
     </div>
