@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Emily Twiddy — Resume</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:     #faf9f7;
+      --ink:    #1c1b19;
+      --ink-2:  #5a5650;
+      --ink-3:  #9a948c;
+      --border: #e5e0d8;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 10pt;
+      line-height: 1.55;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body { background: #fff; color: var(--ink); -webkit-font-smoothing: antialiased; }
+
+    /* ─── Page ─────────────────────────────────────────── */
+    .page {
+      width: 8.5in;
+      min-height: 11in;
+      margin: 0 auto;
+      background: #fff;
+      padding: 0.6in 0.65in;
+    }
+
+    /* ─── Header ───────────────────────────────────────── */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding-bottom: 18px;
+      margin-bottom: 28px;
+      border-bottom: 1.5px solid var(--ink);
+    }
+    .header-name {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 38pt;
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .header-title {
+      font-size: 11pt;
+      color: var(--ink-2);
+      margin-top: 5px;
+      letter-spacing: 0.005em;
+    }
+    .header-contact {
+      text-align: right;
+      font-size: 8.5pt;
+      color: var(--ink-2);
+      line-height: 1.8;
+    }
+    .header-contact a { color: var(--ink-2); text-decoration: none; }
+
+    /* ─── Two-col body ─────────────────────────────────── */
+    .body {
+      display: grid;
+      grid-template-columns: 2.2fr 1fr;
+      gap: 0 40px;
+    }
+
+    /* ─── Section ──────────────────────────────────────── */
+    .section { margin-bottom: 26px; }
+    .section-label {
+      font-size: 7.5pt;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 14px;
+    }
+
+    /* ─── Experience ───────────────────────────────────── */
+    .exp-item { margin-bottom: 18px; }
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .exp-company {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 12pt;
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+    .exp-dates {
+      font-size: 8pt;
+      color: var(--ink-3);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .exp-role {
+      font-size: 9pt;
+      color: var(--ink-2);
+      margin-top: 1px;
+      margin-bottom: 5px;
+      font-style: italic;
+    }
+    .exp-bullets {
+      padding-left: 13px;
+      list-style: disc;
+    }
+    .exp-bullets li {
+      font-size: 8.5pt;
+      color: var(--ink-2);
+      line-height: 1.65;
+      margin-bottom: 2px;
+    }
+
+    /* ─── Education ────────────────────────────────────── */
+    .edu-item { margin-bottom: 14px; }
+    .edu-degree {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 10pt;
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+    .edu-detail {
+      font-size: 8pt;
+      color: var(--ink-2);
+      margin-top: 2px;
+      line-height: 1.5;
+    }
+
+    /* ─── Skills ───────────────────────────────────────── */
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      list-style: none;
+    }
+    .skill-pill {
+      font-size: 7.5pt;
+      color: var(--ink-2);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      padding: 2px 8px;
+    }
+
+    /* ─── Bio ──────────────────────────────────────────── */
+    .bio-text {
+      font-size: 8.5pt;
+      color: var(--ink-2);
+      line-height: 1.7;
+    }
+
+    /* ─── Print ────────────────────────────────────────── */
+    @media print {
+      body { background: #fff; }
+      .page { width: 100%; padding: 0.55in 0.6in; }
+    }
+    @page { size: letter; margin: 0; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <header class="header">
+    <div>
+      <h1 class="header-name">Emily Twiddy</h1>
+      <p class="header-title">Senior UX Designer</p>
+    </div>
+    <div class="header-contact">
+      <a href="https://emilytwiddy.com">emilytwiddy.com</a><br>
+      <a href="mailto:emilydtwiddy@gmail.com">emilydtwiddy@gmail.com</a><br>
+      (828) 514-7614
+    </div>
+  </header>
+
+  <div class="body">
+
+    <!-- ─── Main col ─────────────────────────────────────── -->
+    <main>
+
+      <div class="section">
+        <p class="section-label">Experience</p>
+
+        <div class="exp-item">
+          <div class="exp-header">
+            <span class="exp-company">Fidelity Investments</span>
+            <span class="exp-dates">2023 – Present</span>
+          </div>
+          <p class="exp-role">Senior UX Designer</p>
+          <ul class="exp-bullets">
+            <li>Redesigned the Student Debt Retirement enrollment flow, lifting automated verification rates by 60% and enrollment success by 30%.</li>
+            <li>Introduced interactive guidance, radio-tile loan servicer selection, and real-time PDF data extraction, eliminating a 5-day manual review wait.</li>
+            <li>Redesigned the benefit management dashboard to surface value and drive post-enrollment engagement, achieving 100% task success in usability testing.</li>
+            <li>Collaborated across data science, engineering, legal, marketing, and product to ship research-validated designs at scale.</li>
+          </ul>
+        </div>
+
+        <div class="exp-item">
+          <div class="exp-header">
+            <span class="exp-company">Fidelity Investments</span>
+            <span class="exp-dates">2022 – 2023</span>
+          </div>
+          <p class="exp-role">UX Designer</p>
+          <ul class="exp-bullets">
+            <li>Contributed to the end-to-end design of student debt workplace benefit products.</li>
+            <li>Partnered with cross-functional stakeholders to define design direction and validate solutions through user research.</li>
+          </ul>
+        </div>
+
+        <div class="exp-item">
+          <div class="exp-header">
+            <span class="exp-company">NC State University, College of Design</span>
+            <span class="exp-dates">2021 – 2022</span>
+          </div>
+          <p class="exp-role">Graduate Teaching Assistant</p>
+          <ul class="exp-bullets">
+            <li>Supported design curriculum and mentored students in UX and graphic design coursework.</li>
+          </ul>
+        </div>
+
+        <div class="exp-item">
+          <div class="exp-header">
+            <span class="exp-company">The Lunz Group</span>
+            <span class="exp-dates">2018 – 2020</span>
+          </div>
+          <p class="exp-role">Graphic Designer</p>
+          <ul class="exp-bullets">
+            <li>Designed visual communication and brand assets across multiple client projects.</li>
+          </ul>
+        </div>
+
+        <div class="exp-item">
+          <div class="exp-header">
+            <span class="exp-company">Southeastern University, Marketing Dept.</span>
+            <span class="exp-dates">2017 – 2020</span>
+          </div>
+          <p class="exp-role">Graduate Design Assistant</p>
+          <ul class="exp-bullets">
+            <li>Created marketing and design materials supporting university communications and events.</li>
+          </ul>
+        </div>
+
+        <div class="exp-item">
+          <div class="exp-header">
+            <span class="exp-company">Independent</span>
+            <span class="exp-dates">2015 – Present</span>
+          </div>
+          <p class="exp-role">Freelance Designer</p>
+          <ul class="exp-bullets">
+            <li>UX, UI, and graphic design work across a range of industries and client types.</li>
+          </ul>
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- ─── Sidebar ──────────────────────────────────────── -->
+    <aside>
+
+      <div class="section">
+        <p class="section-label">Education</p>
+
+        <div class="edu-item">
+          <p class="edu-degree">Master of Graphic and Experience Design</p>
+          <p class="edu-detail">North Carolina State University, 2022</p>
+        </div>
+
+        <div class="edu-item">
+          <p class="edu-degree">Master of Business Administration</p>
+          <p class="edu-detail">Southeastern University, 2020</p>
+        </div>
+
+        <div class="edu-item">
+          <p class="edu-degree">BS, Business Marketing</p>
+          <p class="edu-detail">Minor: Graphic Design<br>Southeastern University, 2019</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <p class="section-label">Design Skills</p>
+        <ul class="skills-list">
+          <li class="skill-pill">UX Design</li>
+          <li class="skill-pill">UI Design</li>
+          <li class="skill-pill">Product Design</li>
+          <li class="skill-pill">Design Systems</li>
+          <li class="skill-pill">Prototyping</li>
+          <li class="skill-pill">UX Research</li>
+          <li class="skill-pill">Usability Testing</li>
+          <li class="skill-pill">Journey Mapping</li>
+          <li class="skill-pill">Interaction Design</li>
+          <li class="skill-pill">Accessible Design</li>
+          <li class="skill-pill">Workshops</li>
+          <li class="skill-pill">Mentoring</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <p class="section-label">Tools</p>
+        <ul class="skills-list">
+          <li class="skill-pill">Figma</li>
+          <li class="skill-pill">Adobe Creative Cloud</li>
+          <li class="skill-pill">Microsoft Suite</li>
+          <li class="skill-pill">Google Suite</li>
+          <li class="skill-pill">Slack</li>
+          <li class="skill-pill">Notion</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <p class="section-label">About</p>
+        <p class="bio-text">Digital Experience Designer with 5+ years balancing user needs, business goals, and technical feasibility across 8+ industries and 18+ shipped projects.</p>
+      </div>
+
+    </aside>
+
+  </div>
+</div>
+</body>
+</html>

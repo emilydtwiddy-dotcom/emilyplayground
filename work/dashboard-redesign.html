@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Benefit Management Dashboard Redesign — Emily Twiddy</title>
+  <meta name="description" content="How I redesigned Fidelity's Student Debt Retirement dashboard to improve participant comprehension, findability, and benefit engagement." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg:          #faf9f7;
+      --bg-card:     #f4f2ee;
+      --ink:         #1c1b19;
+      --ink-2:       #5a5650;
+      --ink-3:       #9a948c;
+      --border:      #e5e0d8;
+      --border-dark: #ccc8c0;
+      --card-a:      #f2ece4;
+      --card-b:      #e4ece5;
+      --card-c:      #ebe4f0;
+      --radius-pill: 9999px;
+      --radius-card: 16px;
+      --transition:  0.18s ease;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--ink); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    ul { list-style: none; }
+
+    /* ─── Typography ─────────────────────────────────────────── */
+    .label {
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .h1 { font-family: 'Fraunces', Georgia, serif; font-size: clamp(2rem, 4.5vw, 3.2rem); font-weight: 400; letter-spacing: -0.03em; line-height: 1.12; }
+    .h2 { font-size: clamp(1.4rem, 2.5vw, 2rem); font-weight: 500; letter-spacing: -0.025em; line-height: 1.2; }
+    .body-lg { font-size: 1.0625rem; color: var(--ink-2); line-height: 1.75; }
+    .body { font-size: 1rem; color: var(--ink-2); line-height: 1.75; }
+
+    /* ─── Layout ─────────────────────────────────────────────── */
+    .container { width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 32px; }
+    .container-narrow { width: 100%; max-width: 720px; margin: 0 auto; padding: 0 32px; }
+    @media (max-width: 640px) { .container, .container-narrow { padding: 0 20px; } }
+
+    /* ─── Buttons ─────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 22px; border-radius: var(--radius-pill);
+      border: 1px solid var(--border-dark); font-size: 0.875rem;
+      font-weight: 450; background: transparent; cursor: pointer;
+      transition: background var(--transition), border-color var(--transition), color var(--transition);
+      white-space: nowrap;
+    }
+    .btn:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .btn-filled { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .btn-filled:hover { background: #3a3830; border-color: #3a3830; }
+
+    /* ─── Tags ───────────────────────────────────────────────── */
+    .tag {
+      font-size: 0.75rem; padding: 3px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border); color: var(--ink-2);
+    }
+
+    /* ─── Nav ────────────────────────────────────────────────── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 60px; display: flex; align-items: center;
+      background: rgba(250,249,247,0.88);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s;
+    }
+    .nav.scrolled { border-bottom-color: var(--border); }
+    .nav .container { display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 0.9375rem; font-weight: 500; color: var(--ink);
+      transition: opacity var(--transition);
+    }
+    .nav-logo:hover { opacity: 0.6; }
+    .nav-logo-text { font-size: 0.9375rem; font-weight: 500; }
+    .nav-links { display: flex; align-items: center; gap: 8px; }
+    .nav-links a {
+      padding: 6px 14px; border-radius: var(--radius-pill);
+      font-size: 0.875rem; color: var(--ink-2);
+      transition: background var(--transition), color var(--transition);
+    }
+    .nav-links a:hover { background: var(--bg-card); color: var(--ink); }
+    .nav-links .nav-cta { border: 1px solid var(--border-dark); color: var(--ink); font-weight: 450; }
+    .nav-links .nav-cta:hover { background: var(--ink); color: var(--bg); }
+    .nav-hamburger {
+      display: none; flex-direction: column; justify-content: center;
+      gap: 5px; width: 36px; height: 36px;
+      border: 1px solid var(--border-dark); border-radius: var(--radius-pill);
+      padding: 8px; background: transparent; cursor: pointer;
+    }
+    .nav-hamburger span { display: block; height: 1px; background: var(--ink); transition: transform 0.2s, opacity 0.2s; }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+    .nav-mobile-menu {
+      display: none; position: fixed; top: 60px; left: 0; right: 0;
+      background: var(--bg); border-bottom: 1px solid var(--border);
+      padding: 12px 20px 16px; z-index: 99; flex-direction: column; gap: 4px;
+    }
+    .nav-mobile-menu.open { display: flex; }
+    .nav-mobile-menu a {
+      padding: 10px 14px; border-radius: 10px; font-size: 0.9375rem;
+      color: var(--ink-2); transition: background var(--transition), color var(--transition);
+    }
+    .nav-mobile-menu a:hover { background: var(--bg-card); color: var(--ink); }
+    .nav-mobile-menu .nav-cta { margin-top: 4px; border: 1px solid var(--border-dark); color: var(--ink); font-weight: 450; text-align: center; }
+    @media (max-width: 600px) { .nav-links { display: none; } .nav-hamburger { display: flex; } }
+
+    /* ─── Hero ───────────────────────────────────────────────── */
+    .cs-hero { padding: 120px 0 80px; border-bottom: 1px solid var(--border); }
+    .cs-hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+    .cs-hero h1 { max-width: 760px; margin-bottom: 24px; }
+    .cs-hero-sub { max-width: 600px; margin-bottom: 48px; }
+    .cs-hero-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 0; border: 1px solid var(--border);
+      border-radius: var(--radius-card); overflow: hidden;
+    }
+    @media (max-width: 640px) { .cs-hero-stats { grid-template-columns: 1fr 1fr; } }
+    .cs-stat { padding: 24px 28px; border-right: 1px solid var(--border); }
+    .cs-stat:last-child { border-right: none; }
+    @media (max-width: 640px) {
+      .cs-stat:nth-child(even) { border-right: none; }
+      .cs-stat:nth-child(1), .cs-stat:nth-child(2) { border-bottom: 1px solid var(--border); }
+    }
+    .cs-stat-num { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 500; letter-spacing: -0.03em; margin-bottom: 4px; }
+    .cs-stat-label { font-size: 0.8125rem; color: var(--ink-3); line-height: 1.4; }
+
+    /* ─── Hero visual placeholder ────────────────────────────── */
+    .hero-visual {
+      margin-top: 48px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      background: var(--card-b);
+      aspect-ratio: 16/7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-3);
+      font-size: 0.875rem;
+      letter-spacing: 0.04em;
+    }
+
+    /* ─── Chapter heading ────────────────────────────────────── */
+    .chapter { padding: 80px 0 0; border-top: 1px solid var(--border); }
+    .chapter-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(2.4rem, 6vw, 5rem);
+      font-weight: 400; letter-spacing: -0.03em; line-height: 1.05;
+      color: var(--ink); padding-bottom: 48px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ─── Numbered section cards ─────────────────────────────── */
+    .section-cards { display: flex; flex-direction: column; }
+    .section-card { padding: 40px 0; }
+    .section-card + .section-card { padding-top: 0; }
+    .section-card + .section-card > .container {
+      border-top: 1px solid var(--border);
+      padding-top: 40px;
+    }
+    .section-card .container {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 48px; align-items: start;
+    }
+    .section-card .step-visual { margin-top: 0; }
+    .section-card-inner {
+      display: grid; grid-template-columns: 56px 1fr;
+      gap: 32px; align-items: start;
+    }
+    @media (max-width: 900px) {
+      .section-card .container { grid-template-columns: 1fr; gap: 24px; }
+    }
+    @media (max-width: 640px) { .section-card-inner { grid-template-columns: 1fr; gap: 16px; } }
+    .section-card-num { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; color: var(--ink-3); padding-top: 6px; }
+    .section-card-body h2 {
+      font-size: clamp(1.4rem, 2.5vw, 1.875rem);
+      font-weight: 500; letter-spacing: -0.025em; line-height: 1.2; margin-bottom: 16px;
+    }
+    .section-card-body p { font-size: 1rem; color: var(--ink-2); line-height: 1.75; }
+    .section-card-body p + p { margin-top: 14px; }
+
+    /* ─── Goal / research list ───────────────────────────────── */
+    .goal-list { display: flex; flex-direction: column; margin-top: 8px; }
+    .goal-item {
+      padding: 18px 0; border-bottom: 1px solid var(--border);
+      font-size: 1.0625rem; color: var(--ink-2); line-height: 1.5;
+    }
+    .goal-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .research-list { display: flex; flex-direction: column; margin-top: 8px; }
+    .research-item {
+      padding: 16px 0; border-bottom: 1px solid var(--border);
+      font-size: 0.9375rem; color: var(--ink-2); line-height: 1.6;
+    }
+    .research-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+    /* ─── Media block ────────────────────────────────────────── */
+    .media-block { padding: 40px 0; border-bottom: 1px solid var(--border); }
+    .media-block-inner {
+      border: 1px solid var(--border); border-radius: var(--radius-card);
+      overflow: hidden; background: var(--bg-card);
+    }
+    .media-block img, .media-block video { width: 100%; display: block; }
+    .media-block-caption {
+      padding: 12px 16px; font-size: 0.8125rem;
+      color: var(--ink-3); border-top: 1px solid var(--border);
+    }
+
+    /* ─── Step visual ────────────────────────────────────────── */
+    .step-visual {
+      border: 1px solid var(--border); border-radius: var(--radius-card);
+      background: var(--bg-card); aspect-ratio: 16/8;
+      overflow: hidden; position: relative;
+    }
+    .step-visual img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .step-visual img[src=""],
+    .step-visual img:not([src]) {
+      display: none;
+    }
+    .step-visual:has(img[src=""]) .step-visual-placeholder,
+    .step-visual:has(img:not([src])) .step-visual-placeholder,
+    .step-visual:not(:has(img)) .step-visual-placeholder {
+      display: flex;
+    }
+    .step-visual-placeholder {
+      display: none;
+      position: absolute; inset: 0;
+      align-items: center; justify-content: center;
+      color: var(--ink-3); font-size: 0.8125rem;
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+
+    /* ─── Solution carousel ──────────────────────────────────── */
+    .solutions-section { }
+    .sol-header {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      padding-top: 32px; border-bottom: 1px solid var(--border);
+    }
+    .sol-tabs { display: flex; gap: 0; }
+    .sol-tab {
+      background: none; border: none; border-bottom: 2px solid transparent;
+      cursor: pointer; font-family: inherit; font-size: 0.8125rem;
+      color: var(--ink-3); padding: 12px 22px;
+      position: relative; bottom: -1px;
+      transition: color 0.2s, border-color 0.2s; letter-spacing: 0.01em;
+    }
+    .sol-tab:hover { color: var(--ink); }
+    .sol-tab.active { color: var(--ink); border-bottom-color: var(--ink); }
+    .sol-arrows {
+      display: flex; align-items: center; gap: 10px; padding-bottom: 12px;
+    }
+    .sol-arrow {
+      background: none; border: 1px solid var(--border); cursor: pointer;
+      width: 34px; height: 34px; border-radius: 9999px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--ink-2); transition: border-color 0.2s, color 0.2s;
+    }
+    .sol-arrow:hover { border-color: var(--ink); color: var(--ink); }
+    .sol-counter { font-size: 0.75rem; color: var(--ink-3); letter-spacing: 0.04em; min-width: 28px; text-align: center; }
+    .sol-track { padding: 48px 0; }
+    .sol-slide { display: none; }
+    .sol-slide.active {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 64px; align-items: start;
+      animation: solFadeIn 0.3s ease;
+    }
+    @keyframes solFadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 820px) {
+      .sol-slide.active { grid-template-columns: 1fr; gap: 32px; }
+      .sol-tab { padding: 10px 14px; font-size: 0.75rem; }
+    }
+    .solution-label { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 10px; }
+    .solution-title { font-size: clamp(1.2rem, 2vw, 1.5rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.25; margin-bottom: 12px; }
+    .solution-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .solution-desc { font-size: 0.9375rem; color: var(--ink-2); line-height: 1.7; }
+    .solution-desc + .solution-desc { margin-top: 10px; }
+    .solution-impact {
+      margin-top: 16px; padding: 14px 18px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 10px; font-size: 0.875rem;
+      color: var(--ink-2); line-height: 1.65;
+    }
+    .solution-impact strong { font-weight: 500; color: var(--ink); }
+
+    /* ─── Results ────────────────────────────────────────────── */
+    .results-section { padding: 80px 0; border-bottom: 1px solid var(--border); }
+    .results-chapter-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(2rem, 5vw, 4rem); font-weight: 400;
+      letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 56px;
+    }
+    .results-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 0; border: 1px solid var(--border);
+      border-radius: var(--radius-card); overflow: hidden;
+    }
+    @media (max-width: 700px) { .results-grid { grid-template-columns: 1fr 1fr; } }
+    .result-item { padding: 28px; border-right: 1px solid var(--border); }
+    .result-item:last-child { border-right: none; }
+    @media (max-width: 700px) {
+      .result-item:nth-child(even) { border-right: none; }
+      .result-item:nth-child(1), .result-item:nth-child(2) { border-bottom: 1px solid var(--border); }
+    }
+    .result-num { font-size: clamp(2rem, 4vw, 3rem); font-weight: 500; letter-spacing: -0.04em; line-height: 1; margin-bottom: 8px; }
+    .result-label { font-size: 0.8125rem; color: var(--ink-3); line-height: 1.5; }
+
+    /* ─── Callout ─────────────────────────────────────────────── */
+    .callout {
+      background: var(--card-a); border: 1px solid var(--border);
+      border-radius: var(--radius-card); padding: 32px 36px; margin-top: 40px;
+    }
+    .callout p { font-size: 1rem; color: var(--ink); line-height: 1.7; font-style: italic; }
+    .callout-attr { margin-top: 12px; font-size: 0.8125rem; color: var(--ink-3); font-style: normal; }
+
+    /* ─── Learnings ──────────────────────────────────────────── */
+    .learnings-section { padding: 80px 0; border-bottom: 1px solid var(--border); }
+    .learnings-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+    @media (max-width: 700px) { .learnings-grid { grid-template-columns: 1fr; } }
+    .learning-card { padding: 28px; border: 1px solid var(--border); border-radius: var(--radius-card); }
+    .learning-num { font-size: 0.75rem; color: var(--ink-3); font-weight: 500; letter-spacing: 0.06em; margin-bottom: 12px; }
+    .learning-title { font-size: 1rem; font-weight: 500; margin-bottom: 10px; }
+    .learning-body { font-size: 0.875rem; color: var(--ink-2); line-height: 1.65; font-style: italic; }
+
+    /* ─── Next / Footer ──────────────────────────────────────── */
+    .cs-next { padding: 80px 0; }
+    .cs-next-inner { display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+    .footer { padding: 32px 0; border-top: 1px solid var(--border); }
+    .footer .container { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .footer-left { font-size: 0.875rem; color: var(--ink-3); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 0.875rem; color: var(--ink-3); transition: color var(--transition); }
+    .footer-links a:hover { color: var(--ink); }
+    @media (max-width: 480px) { .footer .container { flex-direction: column; gap: 12px; } }
+
+    /* ─── Scroll animation ───────────────────────────────────── */
+    .fade-up { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .fade-up.visible { opacity: 1; transform: none; }
+    /* ─── Scroll progress bar ────────────────────────────────── */
+    .scroll-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      width: 0%;
+      background: var(--ink);
+      z-index: 200;
+      transition: width 0.1s linear;
+    }
+
+    /* ─── Gradual fade ────────────────────────────────────────── */
+    .gradual-blur {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 80px;
+      pointer-events: none;
+      z-index: 100;
+      background: linear-gradient(to top, var(--bg) 0%, transparent 100%);
+      transition: opacity 0.3s ease;
+    }
+    .gradual-blur.hidden { opacity: 0; }
+    .gradual-blur > div { display: none; }
+
+    /* ─── Cursor glow ────────────────────────────────────────── */
+    .cursor-glow {
+      pointer-events: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(180,160,130,0.38) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      transition: opacity 0.3s ease;
+      will-change: transform;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── Gradual blur overlay ──────────────────────────────────── -->
+  <div class="gradual-blur" aria-hidden="true">
+    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+  </div>
+
+  <!-- ─── Scroll progress ───────────────────────────────────────── -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- ─── Nav ─────────────────────────────────────────────────── -->
+  <nav class="nav" id="nav">
+    <div class="container">
+      <a href="../index.html" class="nav-logo">
+        <img src="../favicon.png" alt="" style="width:22px;height:22px;object-fit:cover;display:block;" />
+        <span class="nav-logo-text">Emily Twiddy</span>
+      </a>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <ul class="nav-links">
+          <li><a href="../index.html#work">Work</a></li>
+          <li><a href="../index.html#about">About</a></li>
+          <li><a href="../index.html#resume">Experience</a></li>
+          <li><a href="../index.html#contact" class="nav-cta">Contact</a></li>
+        </ul>
+        <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+  <div class="nav-mobile-menu" id="mobileMenu">
+    <a href="../index.html#work" class="mobile-link">Work</a>
+    <a href="../index.html#about" class="mobile-link">About</a>
+    <a href="../index.html#resume" class="mobile-link">Experience</a>
+    <a href="../index.html#contact" class="nav-cta mobile-link">Contact</a>
+  </div>
+
+  <!-- ─── Hero ─────────────────────────────────────────────────── -->
+  <header class="cs-hero">
+    <div class="container">
+      <div class="cs-hero-meta">
+        <span class="tag">UX Design</span>
+        <span class="tag">Fintech</span>
+        <span class="tag">Lead Designer</span>
+      </div>
+      <h1 class="h1">Benefit management dashboard<br>redesign to improve participant<br>fit and utilization</h1>
+      <p class="body-lg cs-hero-sub">Research revealed critical usability gaps in Fidelity's Student Debt Retirement dashboard that prevented post-enrollment engagement. I led a redesign to surface value, simplify navigation, and create a personalized experience that drives ongoing participation.</p>
+
+      <div class="cs-hero-stats">
+        <div class="cs-stat">
+          <p class="cs-stat-num">100%</p>
+          <p class="cs-stat-label">task success rate once actions were surfaced</p>
+        </div>
+        <div class="cs-stat">
+          <p class="cs-stat-num">↑</p>
+          <p class="cs-stat-label">participant comprehension scores in usability testing</p>
+        </div>
+        <div class="cs-stat">
+          <p class="cs-stat-num">↓</p>
+          <p class="cs-stat-label">documentation errors and "how does this work?" VOC themes</p>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        Dashboard visuals coming soon
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- CHAPTER: Defining the space                                -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="chapter">
+    <div class="container">
+      <h2 class="chapter-title">Defining the space</h2>
+    </div>
+  </div>
+
+  <div class="section-cards">
+
+    <!-- 01 The Problem -->
+    <div class="section-card fade-up">
+      <div class="container">
+        <div class="section-card-inner">
+          <div class="section-card-num">01</div>
+          <div class="section-card-body">
+            <h2>The Problem</h2>
+            <p>Despite successful enrollment, participants weren't engaging with the benefit post-signup. The existing dashboard used confusing terminology, buried key actions, and failed to communicate how the benefit actually worked — leaving users unclear on what to do next or whether the benefit was even working for them.</p>
+            <p>Key pain points included: opaque documentation requirements, unclear contribution timelines, an inability to articulate the benefit's value, and no visibility into match progress or payment status.</p>
+          </div>
+        </div>
+        <div class="step-visual" style="margin-top:24px;">
+          <img src="" alt="The Problem visual" />
+          <div class="step-visual-placeholder">Image coming soon</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 The Challenge -->
+    <div class="section-card fade-up">
+      <div class="container">
+        <div class="section-card-inner">
+          <div class="section-card-num">02</div>
+          <div class="section-card-body">
+            <h2>The Challenge</h2>
+            <p>Enrollment without engagement is a business problem — Fidelity's pricing model depends on active, ongoing participation. The dashboard needed to reduce cognitive load significantly while surfacing the right information at the right time for each participant's situation.</p>
+            <p>The redesign had to work within Fidelity's enterprise design system, coordinate across multiple partner teams, and be validated through usability research before full release.</p>
+          </div>
+        </div>
+        <div class="step-visual" style="margin-top:24px;">
+          <img src="" alt="The Challenge visual" />
+          <div class="step-visual-placeholder">Image coming soon</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- CHAPTER: Process                                           -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="chapter">
+    <div class="container">
+      <h2 class="chapter-title">Process</h2>
+    </div>
+  </div>
+
+  <div class="section-cards">
+
+    <!-- 03 Alignment & Strategy -->
+    <div class="section-card fade-up">
+      <div class="container">
+        <div class="section-card-inner">
+          <div class="section-card-num">03</div>
+          <div class="section-card-body">
+            <h2>Alignment &amp; Strategy</h2>
+            <p>I started by running workshops to consolidate existing research insights and build alignment around four north-star design principles: clarity, findability, value visibility, and simplicity.</p>
+            <p>From there, I developed a solution framework that mapped directly to the research themes — ensuring every design decision was traceable back to a real user need or business goal.</p>
+          </div>
+        </div>
+        <div class="step-visual" style="margin-top:24px;">
+          <img src="" alt="Alignment and Strategy visual" />
+          <div class="step-visual-placeholder">Image coming soon</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 Our Goals -->
+    <div class="section-card fade-up">
+      <div class="container">
+        <div class="section-card-inner">
+          <div class="section-card-num">04</div>
+          <div class="section-card-body">
+            <h2>Our goals</h2>
+            <div class="goal-list">
+              <div class="goal-item">Increase ongoing participation and payment submissions</div>
+              <div class="goal-item">Simplify the post-enrollment experience to reduce drop-off</div>
+              <div class="goal-item">Improve comprehension of how the benefit works and what to do next</div>
+              <div class="goal-item">Help participants determine their own benefit fit over time</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-visual" style="margin-top:24px;">
+          <img src="" alt="Our Goals visual" />
+          <div class="step-visual-placeholder">Image coming soon</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05 Collaborative Process -->
+    <div class="section-card fade-up">
+      <div class="container">
+        <div class="section-card-inner">
+          <div class="section-card-num">05</div>
+          <div class="section-card-body">
+            <h2>Collaborative Process</h2>
+            <p>I ran a lean, iterative design process with weekly design reviews, Figma-based iteration, close content collaboration to refine terminology, and early engineering coordination to validate feasibility.</p>
+            <p>Rather than a single big-bang release, solutions were validated through moderated usability research before implementation — letting real participant behavior drive prioritization and refinement.</p>
+          </div>
+        </div>
+        <div class="step-visual" style="margin-top:24px;">
+          <img src="" alt="Collaborative Process visual" />
+          <div class="step-visual-placeholder">Image coming soon</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 06 Research & Analysis -->
+    <div class="section-card fade-up">
+      <div class="container">
+        <div class="section-card-inner">
+          <div class="section-card-num">06</div>
+          <div class="section-card-body">
+            <h2>Research &amp; Analysis</h2>
+            <div class="research-list">
+              <div class="research-item"><strong style="font-weight:500;color:var(--ink)">Comprehension</strong> — participants couldn't articulate what the benefit was doing for them or what they contributed</div>
+              <div class="research-item"><strong style="font-weight:500;color:var(--ink)">Findability</strong> — key actions were buried; users couldn't discover what to do next without support</div>
+              <div class="research-item"><strong style="font-weight:500;color:var(--ink)">Documentation</strong> — loan submission requirements were unclear, leading to repeated errors and drop-off</div>
+              <div class="research-item"><strong style="font-weight:500;color:var(--ink)">Value visibility</strong> — no clear connection between enrollment actions and financial outcomes</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-visual" style="margin-top:24px;">
+          <img src="" alt="Research and Analysis visual" />
+          <div class="step-visual-placeholder">Image coming soon</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 07 Vision -->
+    <div class="section-card fade-up">
+      <div class="container">
+        <div class="section-card-inner">
+          <div class="section-card-num">07</div>
+          <div class="section-card-body">
+            <h2>Vision</h2>
+            <p>Our vision was an intelligent, personalized guide — a dashboard that reduced cognitive load by surfacing only what each participant needed at their current stage, while making the benefit's impact unmistakably clear.</p>
+            <p>This meant integrating real contribution data, personalizing messaging based on participant state, and giving users a clear picture of their match progress and next steps without requiring them to hunt for information.</p>
+          </div>
+        </div>
+        <div class="step-visual" style="margin-top:24px;">
+          <img src="" alt="Vision visual" />
+          <div class="step-visual-placeholder">Image coming soon</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- CHAPTER: Key solutions                                     -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="chapter">
+    <div class="container">
+      <h2 class="chapter-title">Key solutions</h2>
+    </div>
+  </div>
+
+  <div class="solutions-section">
+    <div class="container">
+
+      <!-- Tab nav + arrows -->
+      <div class="sol-header">
+        <div class="sol-tabs">
+          <button class="sol-tab active" data-idx="0">01 &nbsp; Clarity &amp; value visibility</button>
+          <button class="sol-tab" data-idx="1">02 &nbsp; Action findability</button>
+          <button class="sol-tab" data-idx="2">03 &nbsp; Lifecycle &amp; engagement</button>
+        </div>
+        <div class="sol-arrows">
+          <button class="sol-arrow" id="solPrev" aria-label="Previous solution">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <span class="sol-counter"><span id="solCurrent">1</span> / 3</span>
+          <button class="sol-arrow" id="solNext" aria-label="Next solution">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Slides -->
+      <div class="sol-track">
+
+        <div class="sol-slide active">
+          <div>
+            <p class="solution-label">Key solution area 1</p>
+            <h3 class="solution-title">Clarity &amp; value visibility</h3>
+            <div class="solution-tags">
+              <span class="tag">Dynamic benefit message</span>
+              <span class="tag">Match simulator</span>
+              <span class="tag">Benefit timeline</span>
+            </div>
+            <p class="solution-desc">We redesigned the above-the-fold experience to lead with personalized benefit messaging that updated based on the participant's actual state — whether they'd just enrolled, submitted a loan, or were already receiving matches.</p>
+            <p class="solution-desc">A match simulator let participants model different loan payment scenarios, making the benefit's financial impact tangible and personal. A benefit timeline gave a clear view of what had happened and what to expect next.</p>
+            <div class="solution-impact"><strong>Impact:</strong> Higher comprehension scores in usability testing; significant reduction in "how does this work?" themes in VOC feedback.</div>
+          </div>
+          <div class="step-visual">
+            <img src="" alt="Clarity and value visibility design" />
+            <div class="step-visual-placeholder">Image coming soon</div>
+          </div>
+        </div>
+
+        <div class="sol-slide">
+          <div>
+            <p class="solution-label">Key solution area 2</p>
+            <h3 class="solution-title">Action findability &amp; guidance</h3>
+            <div class="solution-tags">
+              <span class="tag">Above-fold action placement</span>
+              <span class="tag">Clear CTAs</span>
+              <span class="tag">Two-step confirmation</span>
+            </div>
+            <p class="solution-desc">We restructured the information hierarchy to surface the participant's most important next action above the fold — eliminating the need to scroll or navigate to discover what to do. CTAs were rewritten for clarity, and a two-step confirmation pattern reduced accidental submissions.</p>
+            <div class="solution-impact"><strong>Impact:</strong> 100% task success rate once key actions were surfaced in usability testing; significant drop in confusion and support escalations.</div>
+          </div>
+          <div class="step-visual">
+            <img src="" alt="Action findability and guidance design" />
+            <div class="step-visual-placeholder">Image coming soon</div>
+          </div>
+        </div>
+
+        <div class="sol-slide">
+          <div>
+            <p class="solution-label">Key solution area 3</p>
+            <h3 class="solution-title">Lifecycle &amp; engagement support</h3>
+            <div class="solution-tags">
+              <span class="tag">Benefit-integrated communications</span>
+              <span class="tag">Retirement plan integration</span>
+              <span class="tag">Customized nudges</span>
+            </div>
+            <p class="solution-desc">We designed a communication system that extended the dashboard experience into email and in-app nudges — covering onboarding, payment submission reminders, and match result notifications. Each touchpoint was personalized based on participant state and benefit eligibility.</p>
+            <p class="solution-desc">Integration with retirement plan data allowed the dashboard to show the full picture: student debt payments alongside retirement savings progress, making the benefit's long-term value concrete.</p>
+            <div class="solution-impact"><strong>Impact:</strong> Higher ongoing engagement, more successful payment submissions, and improved long-term benefit value realization.</div>
+          </div>
+          <div class="step-visual">
+            <img src="" alt="Lifecycle and engagement support design" />
+            <div class="step-visual-placeholder">Image coming soon</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- CHAPTER: Results                                           -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="results-section fade-up">
+    <div class="container">
+      <h2 class="results-chapter-title">Clarity drives<br>engagement.</h2>
+      <div class="results-grid">
+        <div class="result-item">
+          <p class="result-num">100%</p>
+          <p class="result-label">task success rate once key actions were surfaced in testing</p>
+        </div>
+        <div class="result-item">
+          <p class="result-num">↑</p>
+          <p class="result-label">participant comprehension scores across all usability sessions</p>
+        </div>
+        <div class="result-item">
+          <p class="result-num">↓</p>
+          <p class="result-label">documentation errors and support escalations post-launch</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <p>"I finally understand how this benefit works and what I need to do."</p>
+        <p class="callout-attr">— Usability research participant</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Key Learnings ─────────────────────────────────────── -->
+  <div class="learnings-section fade-up">
+    <div class="container">
+      <p class="label" style="margin-bottom:12px">Key Learnings</p>
+      <h2 class="h2" style="max-width:500px;margin-bottom:0">Three things I'd take into every project from here.</h2>
+      <div class="learnings-grid">
+        <div class="learning-card">
+          <p class="learning-num">01</p>
+          <h3 class="learning-title">Comprehension Must Be Designed</h3>
+          <p class="learning-body">"Clear content and visual scaffolding aren't polish — they're the core of the product. Without comprehension, engagement is impossible regardless of how well the feature works."</p>
+        </div>
+        <div class="learning-card">
+          <p class="learning-num">02</p>
+          <h3 class="learning-title">Personalization Transforms Perception</h3>
+          <p class="learning-body">"Integrating real contribution data and showing benefit fit in context of each participant's situation turned an abstract benefit into something that felt relevant and worth acting on."</p>
+        </div>
+        <div class="learning-card">
+          <p class="learning-num">03</p>
+          <h3 class="learning-title">Visibility Drives Engagement</h3>
+          <p class="learning-body">"Above-fold placement of the participant's next action eliminated a massive barrier. Users don't go looking for what to do — they need to be met where they are."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Next project ────────────────────────────────────────── -->
+  <section class="cs-next">
+    <div class="container">
+      <div class="cs-next-inner">
+        <div>
+          <p class="label" style="margin-bottom:8px">Next project</p>
+          <p style="font-size:1.125rem;font-weight:500;letter-spacing:-0.01em;">FTD Solutions Iconography Set</p>
+        </div>
+        <a href="../index.html#work" class="btn btn-filled">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Back to all work
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Footer ──────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="container">
+      <p class="footer-left">© 2025 Emily Twiddy</p>
+      <nav class="footer-links">
+        <a href="../index.html#work">Work</a>
+        <a href="../index.html#about">About</a>
+        <a href="mailto:emilydtwiddy@gmail.com?subject=Hey Emily — let's connect">Email</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+
+    // Scroll fade-up
+    const observer = new IntersectionObserver(
+      entries => entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+      }),
+      { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
+    );
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // Nav scroll border + hamburger
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 10); }, { passive: true });
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => { hamburger.classList.toggle('open'); mobileMenu.classList.toggle('open'); });
+    document.querySelectorAll('.mobile-link').forEach(link => link.addEventListener('click', () => { hamburger.classList.remove('open'); mobileMenu.classList.remove('open'); }));
+
+    // Solution carousel
+    (function() {
+      const slides  = document.querySelectorAll('.sol-slide');
+      const tabs    = document.querySelectorAll('.sol-tab');
+      const counter = document.getElementById('solCurrent');
+      let current   = 0;
+
+      function goTo(idx) {
+        slides[current].classList.remove('active');
+        tabs[current].classList.remove('active');
+        current = (idx + slides.length) % slides.length;
+        slides[current].classList.add('active');
+        tabs[current].classList.add('active');
+        counter.textContent = current + 1;
+      }
+
+      document.getElementById('solPrev').addEventListener('click', () => goTo(current - 1));
+      document.getElementById('solNext').addEventListener('click', () => goTo(current + 1));
+      tabs.forEach(tab => tab.addEventListener('click', () => goTo(+tab.dataset.idx)));
+    })();
+  </script>
+
+  <!-- ─── Scroll progress + blur hide ─────────────────────────── -->
+  <script>
+    const progressBar = document.getElementById('scrollProgress');
+    window.addEventListener('scroll', () => {
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      progressBar.style.width = (window.scrollY / total * 100) + '%';
+    }, { passive: true });
+
+    const blurEl = document.querySelector('.gradual-blur');
+    const footerEl = document.querySelector('.footer');
+    if (blurEl && footerEl) {
+      const obs = new IntersectionObserver(([e]) => {
+        blurEl.classList.toggle('hidden', e.isIntersecting);
+      }, { threshold: 0.01 });
+      obs.observe(footerEl);
+    }
+  </script>
+
+  <!-- ─── Cursor glow ──────────────────────────────────────────── -->
+  <div class="cursor-glow" id="cursorGlow"></div>
+  <script>
+    const glow = document.getElementById('cursorGlow');
+    const glowColors = [
+      '242,172,132',
+      '140,180,145',
+      '180,155,210',
+      '210,175,140',
+    ];
+    let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+    let cx = mx, cy = my;
+    window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+    (function animate() {
+      cx += (mx - cx) * 0.08;
+      cy += (my - cy) * 0.08;
+      const t = cx / window.innerWidth * (glowColors.length - 1);
+      const i = Math.floor(t);
+      const f = t - i;
+      const a = glowColors[Math.min(i, glowColors.length - 1)].split(',').map(Number);
+      const b = glowColors[Math.min(i + 1, glowColors.length - 1)].split(',').map(Number);
+      const r = Math.round(a[0] + (b[0] - a[0]) * f);
+      const g = Math.round(a[1] + (b[1] - a[1]) * f);
+      const bl = Math.round(a[2] + (b[2] - a[2]) * f);
+      glow.style.background = `radial-gradient(circle, rgba(${r},${g},${bl},0.38) 0%, transparent 70%)`;
+      glow.style.transform = `translate(${cx - 140}px, ${cy - 140}px)`;
+      requestAnimationFrame(animate);
+    })();
+  </script>
+
+</body>
+</html>

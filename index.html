@@ -1,0 +1,2301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Emily Twiddy — Digital Experience Designer</title>
+  <meta name="description" content="Digital Experience Designer with 5+ years making complex flows feel effortless — across fintech, health, and enterprise." />
+  <link rel="icon" href="favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── Tokens ─────────────────────────────────────────────── */
+    :root {
+      --bg:          #faf9f7;
+      --bg-card:     #f4f2ee;
+      --ink:         #1c1b19;
+      --ink-2:       #5a5650;
+      --ink-3:       #9a948c;
+      --border:      #e5e0d8;
+      --border-dark: #ccc8c0;
+
+      /* project card accents */
+      --card-a:      #f2ece4;   /* warm parchment   */
+      --card-b:      #e4ece5;   /* sage              */
+      --card-c:      #ebe4f0;   /* dusty lavender    */
+      --card-d:      #f0e8e0;   /* warm sand         */
+
+      --radius-pill: 9999px;
+      --radius-card: 16px;
+      --transition:  0.18s ease;
+
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* ─── Dark mode ─────────────────────────────────────────── */
+    /* ─── Reset ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--ink); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    ul { list-style: none; }
+
+    /* ─── Typography ─────────────────────────────────────────── */
+    .label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .h1 { font-family: 'Fraunces', Georgia, serif; font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.12; }
+    .h2 { font-family: 'Fraunces', Georgia, serif; font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 400; letter-spacing: -0.015em; line-height: 1.2; }
+    .h3 { font-size: 1.05rem; font-weight: 500; letter-spacing: -0.01em; }
+    .body { font-size: 1rem; color: var(--ink-2); line-height: 1.7; }
+    .body-sm { font-size: 0.875rem; color: var(--ink-2); line-height: 1.65; }
+
+    /* ─── Layout helpers ─────────────────────────────────────── */
+    .container {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+    @media (max-width: 640px) { .container { padding: 0 20px; } }
+
+    .divider { border: none; border-top: 1px solid var(--border); }
+
+    /* ─── Buttons ────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 22px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-dark);
+      font-size: 0.875rem;
+      font-weight: 450;
+      background: transparent;
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition), color var(--transition);
+      white-space: nowrap;
+    }
+    .btn:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+    .btn-filled {
+      background: var(--ink);
+      color: var(--bg);
+      border-color: var(--ink);
+    }
+    .btn-filled:hover { background: #3a3830; border-color: #3a3830; }
+
+    /* ─── Navigation ─────────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      background: rgba(250, 249, 247, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s;
+    }
+    .nav.scrolled { border-bottom-color: var(--border); }
+    .nav .container { display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--ink);
+      transition: opacity var(--transition);
+    }
+    .nav-logo:hover { opacity: 0.6; }
+    .nav-logo-text { font-size: 0.9375rem; font-weight: 500; }
+    .nav-links { display: flex; align-items: center; gap: 8px; }
+    .nav-links a {
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 0.875rem;
+      color: var(--ink-2);
+      transition: background var(--transition), color var(--transition);
+    }
+    .nav-links a:hover { background: var(--bg-card); color: var(--ink); }
+    .nav-links .nav-cta {
+      border: 1px solid var(--border-dark);
+      color: var(--ink);
+      font-weight: 450;
+    }
+    .nav-links .nav-cta:hover { background: var(--ink); color: var(--bg); }
+
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-pill);
+      padding: 8px;
+      background: transparent;
+      cursor: pointer;
+    }
+    .nav-hamburger span {
+      display: block;
+      height: 1px;
+      background: var(--ink);
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    .nav-mobile-menu {
+      display: none;
+      position: fixed;
+      top: 60px; left: 0; right: 0;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px 16px;
+      z-index: 99;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .nav-mobile-menu.open { display: flex; }
+    .nav-mobile-menu a {
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.9375rem;
+      color: var(--ink-2);
+      transition: background var(--transition), color var(--transition);
+    }
+    .nav-mobile-menu a:hover { background: var(--bg-card); color: var(--ink); }
+    .nav-mobile-menu .nav-cta {
+      margin-top: 4px;
+      border: 1px solid var(--border-dark);
+      color: var(--ink);
+      font-weight: 450;
+      text-align: center;
+    }
+
+
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+    }
+
+    /* ─── Hero ───────────────────────────────────────────────── */
+    .hero {
+      padding: 200px 0 160px;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .hero-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+    /* inline "Welcome, [photo] I'm Emily." headline */
+    .hero-headline {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 0 16px;
+      line-height: 1.15;
+      margin-bottom: 28px;
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(2.6rem, 6vw, 4.4rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+    .hero-headline-text { display: inline; }
+    .hero-photo-wrap {
+      display: inline-flex;
+      flex-shrink: 0;
+      vertical-align: middle;
+    }
+    .hero-photo {
+      width: clamp(78px, 9vw, 108px);
+      height: clamp(108px, 12vw, 144px);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 16px rgba(28,27,25,0.1);
+      transform: rotate(-3deg);
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: default;
+    }
+    .hero-photo:hover {
+      transform: rotate(0deg) scale(1.05);
+      box-shadow: 0 8px 28px rgba(28,27,25,0.13);
+    }
+    .hero-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+    .hero h1 { margin-bottom: 16px; }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      font-size: 0.8125rem;
+      color: var(--ink-2);
+      margin-bottom: 56px;
+    }
+    .hero-badge .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #6bbf7a;
+      flex-shrink: 0;
+    }
+
+    /* ─── Flipping text (h1-level) ──────────────────────────── */
+    .hero-flip-wrap {
+      overflow: hidden;
+      margin-bottom: 40px;
+      min-height: 1.3em;
+    }
+    .hero-flip {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      line-height: 1.3;
+      display: block;
+      transform: translateY(0);
+      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease;
+      opacity: 1;
+    }
+    .hero-flip.flip-exit {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    .hero-flip.flip-enter {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+
+    /* ─── Typewriter cursor ──────────────────────────────────── */
+    .type-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 0.85em;
+      background: var(--ink);
+      vertical-align: middle;
+      margin-left: 3px;
+      animation: blink 0.75s step-end infinite;
+    }
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+    .type-cursor.done { animation: cursorFade 0.4s ease forwards; }
+    @keyframes cursorFade { to { opacity: 0; } }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .hero-arrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 40px;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 1px solid var(--border-dark);
+      color: var(--ink);
+      animation: arrowBob 2.2s ease-in-out infinite;
+      transition: background var(--transition), border-color var(--transition), color var(--transition);
+    }
+    .hero-arrow:hover {
+      background: var(--ink);
+      color: var(--bg);
+      border-color: var(--ink);
+      animation: none;
+    }
+    @keyframes arrowBob {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(6px); }
+    }
+
+    /* ─── Section shell ──────────────────────────────────────── */
+    .section { padding: 96px 0; border-bottom: 1px solid var(--border); }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 56px;
+      gap: 16px;
+    }
+    .section-header .label { margin-bottom: 8px; }
+
+    /* ─── Work grid ──────────────────────────────────────────── */
+    .work-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .work-grid .card-featured {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 700px) {
+      .work-grid { grid-template-columns: 1fr; }
+      .work-grid .card-featured { grid-column: auto; }
+    }
+
+    .project-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.3s ease;
+    }
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(28, 27, 25, 0.1);
+      border-color: var(--border-dark);
+    }
+
+    .card-visual {
+      aspect-ratio: 16/9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-featured .card-visual { aspect-ratio: 21/9; }
+    @media (max-width: 700px) { .card-featured .card-visual { aspect-ratio: 16/9; } }
+
+    .card-mockup {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 40px;
+    }
+
+    /* mockup components */
+    .mock-window {
+      background: rgba(255,255,255,0.85);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 10px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .mock-titlebar {
+      height: 28px;
+      background: rgba(0,0,0,0.04);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      gap: 5px;
+    }
+    .mock-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .mock-content { padding: 16px; }
+    .mock-bar { height: 8px; border-radius: 4px; background: rgba(0,0,0,0.08); margin-bottom: 8px; }
+    .mock-bar-sm { height: 6px; border-radius: 3px; background: rgba(0,0,0,0.05); width: 60%; }
+
+    .mock-mobile {
+      background: rgba(255,255,255,0.9);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      width: 80px;
+      padding: 12px 8px;
+      flex-shrink: 0;
+    }
+    .mock-mobile-bar { height: 6px; border-radius: 3px; background: rgba(0,0,0,0.08); margin-bottom: 6px; }
+
+    .card-body {
+      padding: 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: var(--bg);
+    }
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tag {
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      color: var(--ink-2);
+    }
+    .card-title { font-size: 1.0625rem; font-weight: 500; letter-spacing: -0.01em; }
+    .card-desc { font-size: 0.875rem; color: var(--ink-2); line-height: 1.6; }
+    .card-arrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.8125rem;
+      color: var(--ink-3);
+      margin-top: auto;
+      padding-top: 8px;
+      transition: color var(--transition), gap var(--transition);
+    }
+    .project-card:hover .card-arrow { color: var(--ink); gap: 8px; }
+
+    /* ─── Process strip ──────────────────────────────────────── */
+    .process-section {
+      padding: 72px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+    @media (max-width: 700px) {
+      .process-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .process-step {
+      padding: 32px 28px;
+      border-right: 1px solid var(--border);
+    }
+    .process-step:last-child { border-right: none; }
+    @media (max-width: 700px) {
+      .process-step:nth-child(even) { border-right: none; }
+      .process-step:nth-child(1), .process-step:nth-child(2) { border-bottom: 1px solid var(--border); }
+    }
+    .process-num {
+      font-size: 0.75rem;
+      color: var(--ink-3);
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
+    }
+    .process-title { font-size: 1rem; font-weight: 500; margin-bottom: 8px; }
+    .process-desc { font-size: 0.8125rem; color: var(--ink-2); line-height: 1.6; }
+
+    /* ─── About ──────────────────────────────────────────────── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 80px;
+      align-items: start;
+    }
+    @media (max-width: 820px) { .about-grid { grid-template-columns: 1fr; gap: 48px; } }
+
+    .about-text .label { margin-bottom: 12px; }
+    .about-text h2 { margin-bottom: 24px; }
+    .about-text p { color: var(--ink-2); font-size: 1.0rem; line-height: 1.75; margin-bottom: 16px; }
+    .about-text p:last-of-type { margin-bottom: 32px; }
+
+    .skills-label { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 12px; }
+    .skills-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+    .skill-pill {
+      font-size: 0.8125rem;
+      padding: 5px 14px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      color: var(--ink-2);
+    }
+
+    .about-skills {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--border);
+      margin-top: 64px;
+    }
+    .about-skills-block {
+      padding: 32px 0 0;
+    }
+    .about-skills-block + .about-skills-block {
+      padding-left: 40px;
+      border-left: 1px solid var(--border);
+    }
+    @media (max-width: 600px) {
+      .about-skills { grid-template-columns: 1fr; }
+      .about-skills-block + .about-skills-block {
+        padding-left: 0;
+        border-left: none;
+        border-top: 1px solid var(--border);
+        padding-top: 32px;
+        margin-top: 8px;
+      }
+    }
+
+    /* ─── Deck carousel ─────────────────────────────────────── */
+    .deck-carousel {
+      position: relative;
+      padding-right: 44px;
+      padding-bottom: 4px;
+    }
+    .deck-stage {
+      position: relative;
+      aspect-ratio: 1/1;
+    }
+    .deck-card {
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.5s ease,
+                  opacity 0.5s ease;
+      will-change: transform;
+      transform-origin: bottom center;
+    }
+    .deck-card[data-pos="0"] {
+      transform: translateX(0) translateY(0) rotate(0deg);
+      z-index: 5;
+      box-shadow: 0 8px 32px rgba(28,27,25,0.13);
+    }
+    .deck-card[data-pos="1"] {
+      transform: translateX(13px) translateY(7px) rotate(4deg);
+      z-index: 4;
+      box-shadow: 0 4px 16px rgba(28,27,25,0.08);
+    }
+    .deck-card[data-pos="2"] {
+      transform: translateX(24px) translateY(13px) rotate(7.5deg);
+      z-index: 3;
+      box-shadow: 0 2px 8px rgba(28,27,25,0.06);
+    }
+    .deck-card[data-pos="3"] {
+      transform: translateX(32px) translateY(18px) rotate(10.5deg);
+      z-index: 2;
+      opacity: 0.85;
+    }
+    .deck-card[data-pos="4"] {
+      transform: translateX(38px) translateY(22px) rotate(13deg);
+      z-index: 2;
+      opacity: 0.7;
+    }
+    .deck-card[data-pos="5"] {
+      transform: translateX(44px) translateY(26px) rotate(15.5deg);
+      z-index: 1;
+      opacity: 0.5;
+    }
+    .deck-card img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+    .deck-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 40px;
+    }
+    .deck-btn {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--border-dark);
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--transition), border-color var(--transition), color var(--transition);
+      color: var(--ink);
+      flex-shrink: 0;
+    }
+    .deck-btn:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .deck-counter {
+      font-size: 0.8125rem;
+      color: var(--ink-3);
+      min-width: 36px;
+      text-align: center;
+    }
+
+    /* ─── Currently ─────────────────────────────────────────── */
+    .currently {
+      margin-top: 72px;
+      padding-top: 48px;
+      border-top: 1px solid var(--border);
+    }
+    .currently-header {
+      display: flex;
+      align-items: baseline;
+      gap: 24px;
+      margin-bottom: 36px;
+    }
+    .currently-header .label { margin-bottom: 0; }
+    .currently-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 96px;
+    }
+    @media (max-width: 640px) { .currently-cols { grid-template-columns: 1fr; gap: 36px; } }
+
+    .currently-col-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .currently-col-label svg { opacity: 0.6; }
+
+    .cover-row {
+      display: flex;
+      gap: 32px;
+      align-items: flex-end;
+    }
+
+    /* ── Shimmer loading ── */
+    .cover-loading {
+      background: linear-gradient(90deg, var(--bg-card) 25%, var(--border) 50%, var(--bg-card) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s ease infinite;
+    }
+
+    /* ══════════════════════════════════════════
+       VINYL PLAYER
+    ══════════════════════════════════════════ */
+    .vinyl-player {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .vinyl-player:focus { outline: none; }
+
+    /* album art sleeve */
+    .vinyl-sleeve {
+      position: absolute;
+      left: 0; top: 0;
+      width: 130px; height: 130px;
+      border-radius: 6px;
+      overflow: hidden;
+      z-index: 2;
+      box-shadow: 0 8px 24px rgba(28,27,25,0.18);
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+      background: var(--bg-card);
+    }
+    .vinyl-sleeve img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .vinyl-player.playing .vinyl-sleeve { transform: translateX(-24px); }
+
+    /* vinyl record */
+    .vinyl-disc {
+      position: absolute;
+      right: 0; top: 50%;
+      width: 130px; height: 130px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 50% 50%,
+        #2a2a2a 0%, #2a2a2a 12%,
+        #111 13%, #1a1a1a 16%,
+        #111 17%, #222 24%,
+        #111 25%, #1a1a1a 32%,
+        #111 33%, #222 40%,
+        #111 41%, #1a1a1a 48%,
+        #111 49%, #333 100%);
+      transform: translateY(-50%);
+      z-index: 1;
+      transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,0.04), 0 4px 16px rgba(0,0,0,0.4);
+    }
+    .vinyl-disc::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: #c8b89a;
+      transform: translate(-50%, -50%);
+    }
+    .vinyl-player.playing .vinyl-disc {
+      transform: translateY(-50%) translateX(14px);
+      animation: spin 2.4s linear infinite;
+    }
+    @keyframes spin { from { transform: translateY(-50%) translateX(14px) rotate(0deg); } to { transform: translateY(-50%) translateX(14px) rotate(360deg); } }
+
+    /* play/pause button overlay on sleeve */
+    .vinyl-play-btn {
+      position: absolute;
+      top: 50%; left: calc(65px - 18px);
+      transform: translateY(-50%);
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 3;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+    .vinyl-play-btn svg { display: block; }
+    .vinyl-player:hover .vinyl-play-btn,
+    .vinyl-player.playing .vinyl-play-btn { opacity: 1; }
+
+    /* track label below */
+    .vinyl-label {
+      position: absolute;
+      bottom: -28px; left: 0;
+      font-size: 0.7rem;
+      color: var(--ink-3);
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 140px;
+    }
+    .vinyl-label strong { display: block; color: var(--ink-2); font-weight: 500; font-size: 0.75rem; }
+
+    /* ══════════════════════════════════════════
+       3D BOOK — cover lifts on hover
+    ══════════════════════════════════════════ */
+    .book-item {
+      position: relative;
+      width: 105px;
+      height: 152px;
+      perspective: 600px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .book-item:focus { outline: none; }
+
+    /* Pages block — always-visible backing, creates depth illusion */
+    .book-pages {
+      position: absolute;
+      inset: 0;
+      border-radius: 2px 3px 3px 2px;
+      background: #ece8e0;
+      box-shadow: 4px 6px 20px rgba(28,27,25,0.24);
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent, transparent 5px,
+        rgba(0,0,0,0.018) 5px, rgba(0,0,0,0.018) 6px
+      );
+    }
+    /* Right-edge page thickness */
+    .book-pages::after {
+      content: '';
+      position: absolute;
+      right: -4px; top: 3px;
+      width: 4px; height: calc(100% - 6px);
+      background: linear-gradient(to right, #ccc8be, #b8b2a8);
+      border-radius: 0 2px 2px 0;
+    }
+
+    /* Inside — text revealed when cover swings open */
+    .book-inside {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 10px;
+      text-align: center;
+    }
+    .book-inside-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 0.66rem;
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.45;
+      margin-bottom: 5px;
+    }
+    .book-inside-author {
+      font-size: 0.58rem;
+      color: var(--ink-3);
+      line-height: 1.3;
+    }
+
+    /* Cover — sits over pages, rotates open from spine (left edge) */
+    .book-cover {
+      position: absolute;
+      inset: 0;
+      border-radius: 2px 3px 3px 2px;
+      overflow: hidden;
+      transform-origin: left center;
+      transform: rotateY(0deg);
+      transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+      background: var(--bg-card);
+      z-index: 1;
+    }
+    .book-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    /* Spine shadow gradient on cover */
+    .book-cover::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to right, rgba(0,0,0,0.17) 0%, transparent 22%);
+      pointer-events: none;
+    }
+    /* Hover: cover foreshortens to a sliver, inside text is revealed */
+    .book-item:hover .book-cover { transform: rotateY(-72deg); }
+
+    /* Shimmer while loading */
+    .cover-loading {
+      background: linear-gradient(100deg, var(--bg-card) 30%, var(--border) 50%, var(--bg-card) 70%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s ease-in-out infinite;
+    }
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ─── Resume ─────────────────────────────────────────────── */
+    .resume-section {
+      padding: 96px 0;
+    }
+    .resume-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+    @media (max-width: 820px) { .resume-layout { grid-template-columns: 1fr; gap: 48px; } }
+
+    .resume-intro .label { margin-bottom: 12px; }
+    .resume-intro h2 { margin-bottom: 16px; }
+    .resume-intro p { color: var(--ink-2); line-height: 1.75; margin-bottom: 32px; }
+    .resume-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    /* ─── Exp toggle ─────────────────────────────────────────── */
+    .exp-col-header {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin-bottom: 24px;
+    }
+    .exp-tabs {
+      display: inline-flex;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      padding: 3px;
+    }
+    .exp-tab {
+      padding: 5px 16px;
+      border-radius: var(--radius-pill);
+      font-size: 0.8125rem;
+      font-weight: 450;
+      cursor: pointer;
+      color: var(--ink-2);
+      border: none;
+      background: transparent;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .exp-tab.active {
+      background: var(--ink);
+      color: var(--bg);
+    }
+    .exp-panel { display: none; }
+    .exp-panel.active { display: flex; flex-direction: column; }
+
+    .experience-list { display: flex; flex-direction: column; gap: 0; }
+    .exp-item {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 0 12px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+    .exp-item:first-child { border-top: none; padding-top: 0; }
+    .exp-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .exp-row { display: contents; }
+    .exp-year { font-size: 0.8125rem; color: var(--ink-3); padding-top: 2px; }
+    .exp-role { font-size: 0.9375rem; font-weight: 500; }
+    .exp-company { font-size: 0.875rem; color: var(--ink-2); grid-column: 2; }
+    .exp-desc { font-size: 0.8125rem; color: var(--ink-3); line-height: 1.6; }
+
+    /* ─── Why Me strengths ──────────────────────────────────── */
+    .strengths {
+      margin-top: 64px;
+      padding-top: 48px;
+      border-top: 1px solid var(--border);
+    }
+    .strengths-header {
+      margin-bottom: 40px;
+    }
+    .strengths-header .label { margin-bottom: 8px; }
+    .strengths-header h3 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+    }
+    .strengths-list {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    @media (max-width: 820px) { .strengths-list { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 500px)  { .strengths-list { grid-template-columns: 1fr; } }
+    .strength-item {
+      padding: 32px 28px;
+      border-right: 1px solid var(--border);
+    }
+    .strength-item:last-child { border-right: none; }
+    @media (max-width: 820px) {
+      .strength-item:nth-child(even) { border-right: none; }
+      .strength-item:nth-child(1), .strength-item:nth-child(2) { border-bottom: 1px solid var(--border); }
+    }
+    @media (max-width: 500px) {
+      .strength-item { border-right: none; border-bottom: 1px solid var(--border); }
+      .strength-item:last-child { border-bottom: none; }
+    }
+    .strength-icon {
+      width: 32px; height: 32px;
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--ink-3);
+      margin-bottom: 16px;
+    }
+    .strength-icon svg { display: block; }
+    .strength-title {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .strength-desc {
+      font-size: 0.8125rem;
+      color: var(--ink-2);
+      line-height: 1.6;
+    }
+
+    /* ─── References ────────────────────────────────────────── */
+    .references {
+      padding-top: 80px;
+      padding-bottom: 8px;
+    }
+    .references .label { margin-bottom: 8px; }
+    .ref-orbital {
+      position: relative;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+    @media (max-width: 600px) { .ref-orbital { height: 380px; } }
+    .ref-card {
+      position: absolute;
+      width: min(520px, 90vw);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 32px;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      transition: transform 0.55s cubic-bezier(0.16,1,0.3,1),
+                  opacity 0.55s ease,
+                  box-shadow 0.55s ease;
+      will-change: transform, opacity;
+    }
+    .ref-card[data-pos="0"] {
+      transform: translateX(0) scale(1);
+      opacity: 1; z-index: 3;
+      box-shadow: 0 16px 48px rgba(28,27,25,0.10);
+    }
+    .ref-card[data-pos="1"] {
+      transform: translateX(52%) scale(0.86);
+      opacity: 0.4; z-index: 2;
+    }
+    .ref-card[data-pos="2"] {
+      transform: translateX(-52%) scale(0.86);
+      opacity: 0.4; z-index: 2;
+    }
+    .ref-quote {
+      font-size: 0.9375rem;
+      color: var(--ink-2);
+      line-height: 1.75;
+      flex: 1;
+    }
+    .ref-quote::before { content: '\201C'; }
+    .ref-quote::after  { content: '\201D'; }
+    .ref-person {
+      display: flex; flex-direction: column; gap: 2px;
+      padding-top: 16px; border-top: 1px solid var(--border);
+    }
+    .ref-name { font-size: 0.875rem; font-weight: 500; color: var(--ink); }
+    .ref-title { font-size: 0.8125rem; color: var(--ink-3); }
+    .ref-linkedin {
+      display: inline-flex; align-items: center; gap: 5px;
+      margin-top: 8px; font-size: 0.75rem;
+      color: var(--ink-3); transition: color var(--transition);
+    }
+    .ref-linkedin:hover { color: var(--ink); }
+    .ref-nav {
+      display: flex; justify-content: center; align-items: center;
+      gap: 10px; margin-top: 28px;
+    }
+    .ref-dot {
+      width: 6px; height: 6px; border-radius: 9999px;
+      background: var(--border-dark); cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+    }
+    .ref-dot.active { background: var(--ink); transform: scale(1.4); }
+    .ref-card[data-pos="hidden"] { opacity: 0; pointer-events: none; transform: scale(0.75); z-index: 1; }
+
+    /* ─── Contact ────────────────────────────────────────────── */
+    .contact-section {
+      padding: 120px 0;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .contact-section .label { margin-bottom: 16px; }
+    .contact-section h2 { max-width: 560px; margin: 0 auto 20px; }
+    .contact-section p { color: var(--ink-2); max-width: 440px; margin: 0 auto 40px; line-height: 1.7; }
+    .contact-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .contact-note { margin-top: 20px; font-size: 0.8125rem; color: var(--ink-3); }
+
+    /* ─── Footer ─────────────────────────────────────────────── */
+    .footer {
+      padding: 32px 0;
+    }
+    .footer .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .footer-left { font-size: 0.875rem; color: var(--ink-3); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 0.875rem; color: var(--ink-3); transition: color var(--transition); }
+    .footer-links a:hover { color: var(--ink); }
+    @media (max-width: 480px) { .footer .container { flex-direction: column; gap: 12px; } }
+
+    /* ─── Case study overlay (coming soon) ───────────────────── */
+    .case-soon-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(0,0,0,0.08);
+      font-size: 0.75rem;
+      color: var(--ink-2);
+      position: absolute;
+      top: 14px;
+      right: 14px;
+    }
+
+    /* ─── Animations ─────────────────────────────────────────── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      filter: blur(3px);
+      transition:
+        opacity  0.65s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+        filter   0.65s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: none;
+      filter: blur(0);
+    }
+
+    /* Hero entrance — runs immediately on load */
+    .hero-enter {
+      opacity: 0;
+      transform: translateY(20px);
+      filter: blur(2px);
+      transition:
+        opacity  0.7s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+        filter   0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .hero-enter.visible {
+      opacity: 1;
+      transform: none;
+      filter: blur(0);
+    }
+
+    /* ─── Stats strip ─────────────────────────────────────────── */
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      margin-top: 56px;
+    }
+    @media (max-width: 640px) { .hero-stats { grid-template-columns: 1fr 1fr; } }
+    .hero-stat {
+      padding: 24px 28px;
+      border-right: 1px solid var(--border);
+      transition: background var(--transition);
+    }
+    .hero-stat:last-child { border-right: none; }
+    @media (max-width: 640px) {
+      .hero-stat:nth-child(even)  { border-right: none; }
+      .hero-stat:nth-child(1), .hero-stat:nth-child(2) { border-bottom: 1px solid var(--border); }
+    }
+    .hero-stat:hover { background: var(--bg-card); }
+    .hero-stat-num {
+      font-size: clamp(1.75rem, 3vw, 2.25rem);
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+    .hero-stat-label {
+      font-size: 0.8125rem;
+      color: var(--ink-3);
+      line-height: 1.4;
+    }
+
+    /* ─── Enhanced card interactions ─────────────────────────── */
+    .project-card:hover .card-visual > .card-mockup {
+      transform: scale(1.025);
+    }
+    .card-mockup {
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Metric badge on featured card */
+    .card-metric {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      display: flex;
+      gap: 8px;
+    }
+    .metric-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      border-radius: var(--radius-pill);
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.6);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+    .metric-pill .metric-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #6bbf7a;
+      flex-shrink: 0;
+    }
+
+    /* Card arrow animate */
+    .card-arrow {
+      transition: color 0.2s, gap 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Skill pills — hover pop */
+    .skill-pill {
+      cursor: default;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background var(--transition), border-color var(--transition);
+    }
+    .skill-pill:hover {
+      transform: translateY(-2px);
+      background: var(--bg-card);
+      border-color: var(--border-dark);
+    }
+
+    /* Process step hover */
+    .process-step {
+      transition: background var(--transition), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .process-step:hover { background: var(--bg-card); transform: translateY(-3px); }
+
+    /* Scroll progress bar */
+    .scroll-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      width: 0%;
+      background: var(--ink);
+      z-index: 200;
+      transition: width 0.1s linear;
+    }
+
+    /* Hero photo float */
+    @keyframes float {
+      0%, 100% { transform: rotate(-3deg) translateY(0px); }
+      50%       { transform: rotate(-3deg) translateY(-14px); }
+    }
+    .hero-photo {
+      animation: float 5s ease-in-out infinite;
+    }
+    .hero-photo:hover {
+      animation: none;
+    }
+
+    /* Stagger fade for skill pills */
+    .skills-list .skill-pill {
+      opacity: 0;
+      transform: translateY(10px);
+      transition:
+        opacity 0.4s cubic-bezier(0.16,1,0.3,1),
+        transform 0.4s cubic-bezier(0.16,1,0.3,1),
+        background var(--transition),
+        border-color var(--transition);
+    }
+    .skills-list.pills-visible .skill-pill {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* Process steps stagger */
+    .process-step {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .process-step.step-visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1), background var(--transition);
+    }
+
+    /* Project card 3D tilt */
+    .project-card {
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+    /* ─── Gradual fade ──────────────────────────────────────── */
+    .gradual-blur {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 80px;
+      pointer-events: none;
+      z-index: 50;
+      background: linear-gradient(to top, var(--bg) 0%, transparent 100%);
+      transition: opacity 0.3s ease;
+    }
+    .gradual-blur.hidden { opacity: 0; }
+    .gradual-blur > div { display: none; }
+
+    /* ─── Cursor glow ────────────────────────────────────────── */
+    .cursor-glow {
+      pointer-events: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(180,160,130,0.38) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      transition: opacity 0.3s ease;
+      will-change: transform;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ─── Gradual blur overlay ────────────────────────────────────── -->
+  <div class="gradual-blur" aria-hidden="true">
+    <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+  </div>
+
+  <!-- ─── Scroll progress ────────────────────────────────────────── -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- ─── Navigation ──────────────────────────────────────────── -->
+  <nav class="nav" id="nav">
+    <div class="container">
+      <a href="#" class="nav-logo">
+        <img src="favicon.png" alt="" style="width:22px;height:22px;object-fit:cover;display:block;" />
+        <span class="nav-logo-text">Emily Twiddy</span>
+      </a>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <ul class="nav-links">
+          <li><a href="#work">Work</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#resume">Experience</a></li>
+          <li><a href="#contact" class="nav-cta">Contact</a></li>
+        </ul>
+        <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+  <div class="nav-mobile-menu" id="mobileMenu">
+    <a href="#work" class="mobile-link">Work</a>
+    <a href="#about" class="mobile-link">About</a>
+    <a href="#resume" class="mobile-link">Experience</a>
+    <a href="#contact" class="nav-cta mobile-link">Contact</a>
+  </div>
+
+  <!-- ─── Hero ────────────────────────────────────────────────── -->
+  <header class="hero">
+    <div class="container">
+      <div class="hero-inner">
+
+        <div class="hero-badge hero-enter" style="--d:0ms">
+          <span class="dot"></span>
+          Open to new opportunities
+        </div>
+
+        <!-- Inline headline: Welcome, [photo] I'm Emily. -->
+        <div class="hero-headline hero-enter" style="--d:80ms">
+          <span class="hero-headline-text">Welcome,</span>
+          <div class="hero-photo-wrap">
+            <div class="hero-photo">
+              <img src="headshot_profile 2.png" alt="Emily Twiddy" />
+            </div>
+          </div>
+          <span class="hero-headline-text">I'm Emily.</span>
+        </div>
+
+        <div class="hero-flip-wrap hero-enter" style="--d:180ms">
+          <span class="hero-flip" id="heroFlip">I'm a user experience designer.</span>
+        </div>
+
+        <a href="#work" class="hero-arrow hero-enter" style="--d:280ms" aria-label="View work">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4v12M4 10l6 6 6-6"/></svg>
+        </a>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── Work ─────────────────────────────────────────────────── -->
+  <section class="section" id="work">
+    <div class="container">
+      <p class="label" style="margin-bottom:12px">Selected Work</p>
+      <h2 class="h2" style="margin-bottom:56px">A few recent bodies of work I'm proud of.</h2>
+
+      <div class="work-grid">
+
+        <!-- Project 1 — Featured, Design Systems -->
+        <article class="project-card card-featured fade-up" style="--delay:0ms" onclick="window.location='work/fidelity-enrollment.html'" role="link" tabindex="0">
+          <div class="card-visual" style="background: var(--card-a);">
+            <div class="card-mockup" style="padding:0;">
+              <img src="Workplace benefit enrollment/SDR-Vision-2.gif" alt="Benefit Enrollment Redesign preview" style="width:100%;height:100%;object-fit:cover;object-position:top;" />
+            </div>
+            <!-- Metric pills -->
+            <div class="card-metric">
+              <span class="metric-pill"><span class="metric-dot"></span>60% verification lift</span>
+              <span class="metric-pill">30% enrollment lift</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-meta">
+              <div class="card-tags">
+                <span class="tag">UX Design</span>
+                <span class="tag">Fintech</span>
+                <span class="tag">Fidelity Investments</span>
+              </div>
+            </div>
+            <h3 class="card-title">Workplace benefit enrollment redesign to increase auto-verification</h3>
+            <p class="card-desc">Redesigned the Student Debt Retirement enrollment flow after a key verification partner was lost to legislation. Introduced interactive guidance, radio-tile loan servicer selection, and real-time PDF data extraction — lifting automated verification rates by 60% and enrollment success by 30% while eliminating a 5-day manual review wait.</p>
+            <a href="work/fidelity-enrollment.html" class="card-arrow">View case study <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
+        </article>
+
+        <!-- Project 2 — Dashboard Redesign -->
+        <article class="project-card card-featured fade-up" style="--delay:80ms" onclick="window.location='work/dashboard-redesign.html'" role="link" tabindex="0">
+          <div class="card-visual" style="background: var(--card-b);">
+            <div class="card-mockup" style="padding:0;">
+              <img src="Workplace benefit enrollment/Group 1000002203.png" alt="Benefit Management Dashboard preview" style="width:100%;height:100%;object-fit:cover;object-position:top;" />
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-tags">
+              <span class="tag">UX Design</span>
+              <span class="tag">Fintech</span>
+              <span class="tag">Fidelity Investments</span>
+            </div>
+            <h3 class="card-title">Benefit management dashboard redesign to improve participant fit and utilization</h3>
+            <p class="card-desc">Redesigned the Student Debt Retirement dashboard to surface benefit value, simplify navigation, and drive post-enrollment engagement — achieving 100% task success in usability testing and higher participant comprehension scores.</p>
+            <a href="work/dashboard-redesign.html" class="card-arrow">View case study <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
+        </article>
+
+        <!-- Project 3 — removed -->
+        <!--
+        <article class="project-card fade-up" style="--delay:160ms">
+          <div class="card-visual" style="background: var(--card-c);">
+            <div class="card-mockup">
+              <div class="mock-window" style="width:260px;">
+                <div class="mock-titlebar"></div>
+                <div class="mock-content" style="padding:12px;">
+                  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;">
+                    <div style="height:36px;border-radius:6px;background:rgba(0,0,0,0.06)"></div>
+                    <div style="height:36px;border-radius:6px;background:rgba(0,0,0,0.04)"></div>
+                    <div style="height:36px;border-radius:6px;background:rgba(0,0,0,0.07)"></div>
+                  </div>
+                  <div style="height:70px;border-radius:6px;background:rgba(0,0,0,0.04);margin-bottom:8px;display:flex;align-items:flex-end;padding:8px;gap:4px;">
+                    <div style="width:16px;background:rgba(0,0,0,0.12);border-radius:2px 2px 0 0;height:60%"></div>
+                    <div style="width:16px;background:rgba(0,0,0,0.12);border-radius:2px 2px 0 0;height:85%"></div>
+                    <div style="width:16px;background:rgba(0,0,0,0.15);border-radius:2px 2px 0 0;height:70%"></div>
+                    <div style="width:16px;background:rgba(0,0,0,0.1);border-radius:2px 2px 0 0;height:45%"></div>
+                    <div style="width:16px;background:rgba(0,0,0,0.12);border-radius:2px 2px 0 0;height:90%"></div>
+                    <div style="width:16px;background:rgba(0,0,0,0.08);border-radius:2px 2px 0 0;height:55%"></div>
+                  </div>
+                  <div class="mock-bar" style="width:85%"></div>
+                  <div class="mock-bar-sm"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-tags">
+              <span class="tag">Mobile</span>
+              <span class="tag">Health</span>
+              <span class="tag">Zero-to-One</span>
+            </div>
+            <h3 class="card-title">Hand Aid</h3>
+            <p class="card-desc">Designed a mobile application to support people managing hand injuries or post-surgical recovery. Focused on reducing friction in a stressful health context through clear information architecture, accessible interactions, and a calm, reassuring visual system.</p>
+            <span class="card-arrow">View case study <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </article>
+        -->
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Process ──────────────────────────────────────────────── -->
+  <section class="process-section">
+    <div class="container">
+      <div class="process-grid">
+        <div class="process-step fade-up">
+          <p class="process-num">01</p>
+          <h3 class="process-title">Align</h3>
+          <p class="process-desc">Get clear on goals, constraints, and what success actually looks like before any design work starts.</p>
+        </div>
+        <div class="process-step fade-up">
+          <p class="process-num">02</p>
+          <h3 class="process-title">Research</h3>
+          <p class="process-desc">User interviews, competitor audits, and experience mapping to get to the real problem, not just the stated one.</p>
+        </div>
+        <div class="process-step fade-up">
+          <p class="process-num">03</p>
+          <h3 class="process-title">Design</h3>
+          <p class="process-desc">Start with the best solution for the user. Explore concepts, build wireframes and prototypes, then scale to what's feasible.</p>
+        </div>
+        <div class="process-step fade-up">
+          <p class="process-num">04</p>
+          <h3 class="process-title">Deliver</h3>
+          <p class="process-desc">Test in market, refine, hand off, and stay involved post-launch. The work doesn't stop when the file ships.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── About ────────────────────────────────────────────────── -->
+  <section class="section" id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-text fade-up">
+          <p class="label">About</p>
+          <h2 class="h2" style="margin-bottom:24px">Hi! I'm Emily.</h2>
+          <p>Thanks for checking out my work. Like a lot of people in UX, I didn't start here. I took a few creative detours along the way, and I'm glad I did.</p>
+          <p>These days I'm at Fidelity Investments, working on tools for people dealing with student debt. I like getting into complex problems and finding ways to make them feel a little clearer and easier to navigate.</p>
+          <p>Outside of work, I try to balance out the screen time. My dog, Banjo, gets me outside and moving. Yoga helps me slow down. And when I need a break from thinking, I'll mess around with clay or paint, just making things for the sake of it.</p>
+          <p>It's all part of what keeps me grounded, curious, and ready to take on the next challenge.</p>
+        </div>
+
+        <div class="deck-carousel fade-up">
+          <div class="deck-stage">
+            <div class="deck-card">
+              <img src="About photos/DSCF0915.png" alt="Emily" />
+            </div>
+            <div class="deck-card">
+              <img src="About photos/DSCF2495.png" alt="Emily" />
+            </div>
+            <div class="deck-card">
+              <img src="About photos/DSCF2599.png" alt="Emily" />
+            </div>
+            <div class="deck-card">
+              <img src="About photos/DSCF2744.png" alt="Emily" />
+            </div>
+            <div class="deck-card">
+              <img src="About photos/IMG_9167.png" alt="Emily" />
+            </div>
+            <div class="deck-card">
+              <img src="About photos/IMG_9907.png" alt="Emily" />
+            </div>
+          </div>
+          <div class="deck-controls">
+            <button class="deck-btn" id="deckPrev" aria-label="Previous photo">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12L6 8l4-4"/></svg>
+            </button>
+            <span class="deck-counter" id="deckCounter">1 / 6</span>
+            <button class="deck-btn" id="deckNext" aria-label="Next photo">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Currently listening + reading — edit CURRENTLY config in the script below -->
+      <div class="currently fade-up">
+        <p class="label" style="margin-bottom:24px">Currently</p>
+        <div class="currently-cols">
+          <div>
+            <p class="currently-col-label">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="6"/><circle cx="7" cy="7" r="2"/></svg>
+              Listening to
+            </p>
+            <div class="cover-row" id="musicRow"></div>
+          </div>
+          <div>
+            <p class="currently-col-label">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h4a2 2 0 0 1 2 2v7a1.5 1.5 0 0 0-1.5-1.5H2V3z"/><path d="M12 3H8a2 2 0 0 0-2 2v7a1.5 1.5 0 0 1 1.5-1.5H12V3z"/></svg>
+              Reading
+            </p>
+            <div class="cover-row" id="bookRow"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── Resume ───────────────────────────────────────────────── -->
+  <section class="resume-section" id="resume">
+    <div class="container">
+      <div class="resume-layout">
+        <div class="resume-intro fade-up">
+          <p class="label" style="margin-bottom:12px">Experience</p>
+          <h2 class="h2" style="margin-bottom:16px">A bit about my work</h2>
+          <p class="body">I got my start in design from small internships and gigs on the side while in college. From there, my interest in the bigger picture grew and I found myself landing in UX! I love partnering with teams big and small to make real business and user impact.</p>
+          <div class="resume-actions">
+            <a href="emily-twiddy-resume.pdf" target="_blank" rel="noopener" class="btn btn-filled">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v8M4 7l3 3 3-3M2 11h10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Download resume
+            </a>
+            <a href="https://www.linkedin.com/in/emily-twiddy-a3809417a/" target="_blank" rel="noopener" class="btn">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M4 6v4M4 4v.5M7 10V7.5C7 6.67 7.67 6 8.5 6S10 6.67 10 7.5V10M7 6v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+              LinkedIn
+            </a>
+          </div>
+
+        </div>
+
+        <div class="fade-up">
+          <div class="exp-col-header">
+            <div class="exp-tabs" role="tablist">
+              <button class="exp-tab active" data-panel="exp-work" role="tab" aria-selected="true">Work</button>
+              <button class="exp-tab" data-panel="exp-education" role="tab" aria-selected="false">Education</button>
+            </div>
+          </div>
+
+          <!-- Work panel -->
+          <div class="exp-panel active" id="exp-work" role="tabpanel">
+            <div class="exp-item">
+              <div class="exp-row">
+                <span class="exp-year">2023–Now</span>
+                <p class="exp-role">Senior UX Designer</p>
+              </div>
+              <p class="exp-company">Fidelity Investments</p>
+            </div>
+            <div class="exp-item">
+              <div class="exp-row">
+                <span class="exp-year">2022–2023</span>
+                <p class="exp-role">UX Designer</p>
+              </div>
+              <p class="exp-company">Fidelity Investments</p>
+            </div>
+            <div class="exp-item">
+              <div class="exp-row">
+                <span class="exp-year">2021–2022</span>
+                <p class="exp-role">Graduate Teaching Assistant</p>
+              </div>
+              <p class="exp-company">NC State University, College of Design</p>
+            </div>
+            <div class="exp-item">
+              <div class="exp-row">
+                <span class="exp-year">2018–2020</span>
+                <p class="exp-role">Graphic Designer</p>
+              </div>
+              <p class="exp-company">The Lunz Group</p>
+            </div>
+            <div class="exp-item">
+              <div class="exp-row">
+                <span class="exp-year">2017–2020</span>
+                <p class="exp-role">Graduate Design Assistant</p>
+              </div>
+              <p class="exp-company">Southeastern University, Marketing Dept.</p>
+            </div>
+            <div class="exp-item">
+              <div class="exp-row">
+                <span class="exp-year">2015–Now</span>
+                <p class="exp-role">Freelance Designer</p>
+              </div>
+              <p class="exp-company">Independent</p>
+            </div>
+          </div>
+
+          <!-- Education panel -->
+          <div class="exp-panel" id="exp-education" role="tabpanel">
+            <div class="exp-item">
+              <div class="exp-row">
+                <span class="exp-year">2022</span>
+                <p class="exp-role">Master of Graphic &amp; Experience Design</p>
+              </div>
+              <p class="exp-company">North Carolina State University</p>
+            </div>
+            <div class="exp-item">
+              <div class="exp-row">
+                <span class="exp-year">2020</span>
+                <p class="exp-role">Master of Business Administration</p>
+              </div>
+              <p class="exp-company">Southeastern University</p>
+            </div>
+            <div class="exp-item">
+              <div class="exp-row">
+                <span class="exp-year">2019</span>
+                <p class="exp-role">BS Marketing · Minor Graphic Design</p>
+              </div>
+              <p class="exp-company">Southeastern University</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Why Me -->
+      <div class="strengths fade-up">
+        <div class="strengths-header">
+          <p class="label">Why me?</p>
+          <h3>What I bring to the table.</h3>
+        </div>
+        <div class="strengths-list">
+
+          <div class="strength-item">
+            <div class="strength-icon">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="7" cy="7" r="5.5"/>
+                <circle cx="7" cy="7" r="2"/>
+              </svg>
+            </div>
+            <p class="strength-title">Craft and detail</p>
+            <p class="strength-desc">I'm thorough in how I approach problems, looking at them from multiple angles and iterating consistently until research validates the direction.</p>
+          </div>
+
+          <div class="strength-item">
+            <div class="strength-icon">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="1.5" y="1.5" width="4" height="4" rx="1"/>
+                <rect x="8.5" y="1.5" width="4" height="4" rx="1"/>
+                <rect x="1.5" y="8.5" width="4" height="4" rx="1"/>
+                <path d="M10.5 8.5v5M8.5 10.5h5"/>
+              </svg>
+            </div>
+            <p class="strength-title">Strategy and systems</p>
+            <p class="strength-desc">I design with scale in mind, balancing user needs with business goals. I know when to reuse patterns and when to create something new.</p>
+          </div>
+
+          <div class="strength-item">
+            <div class="strength-icon">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9.5 4.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                <path d="M1.5 12.5c0-2.2 2-4 4.5-4h2c2.5 0 4.5 1.8 4.5 4"/>
+              </svg>
+            </div>
+            <p class="strength-title">Collaboration</p>
+            <p class="strength-desc">I thrive off working closely with data science, engineering, legal, marketing, and product. It takes more than just design to deliver a solid product.</p>
+          </div>
+
+          <div class="strength-item">
+            <div class="strength-icon">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 10l3-3 2.5 2.5L11 5"/>
+                <path d="M9 5h2v2"/>
+              </svg>
+            </div>
+            <p class="strength-title">Real impact</p>
+            <p class="strength-desc">I bring a unique combination of business and design thinking, which helps me connect user needs to real outcomes. I validate decisions through research and continue learning from what ships.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- References -->
+      <div class="references fade-up">
+        <p class="label">References</p>
+        <h3 style="font-family:'Fraunces',Georgia,serif;font-size:clamp(1.4rem,2.5vw,2rem);font-weight:400;letter-spacing:-0.015em;color:var(--ink);margin-bottom:32px;">What my managers and peers have to say about me</h3>
+        <div class="ref-orbital" id="refOrbital">
+
+          <div class="ref-card" data-pos="0">
+            <p class="ref-quote">Emily has been a delight to work with on the Student Debt Retirement Match project. She has been a wonderful UXD partner and is a huge asset to the organization!</p>
+            <div class="ref-person">
+              <span class="ref-name">Steven B.</span>
+              <span class="ref-title">Content Strategist, Fidelity Investments</span>
+            </div>
+          </div>
+
+          <div class="ref-card" data-pos="1">
+            <p class="ref-quote">You exemplify what it means to be customer obsessed and to own the outcome end to end.</p>
+            <div class="ref-person">
+              <span class="ref-name">Caitlin P.</span>
+              <span class="ref-title">Group Squad Lead, Fidelity Investments</span>
+            </div>
+          </div>
+
+          <div class="ref-card" data-pos="2">
+            <p class="ref-quote">I've come to really rely on your perspective when we're shaping the roadmap. You help connect the dots in a way that's super valuable.</p>
+            <div class="ref-person">
+              <span class="ref-name">Sue F.</span>
+              <span class="ref-title">Squad Leader, Fidelity Investments</span>
+            </div>
+          </div>
+
+          <div class="ref-card" data-pos="hidden">
+            <p class="ref-quote">You excel in stakeholder conversations, even in challenging moments. You bring a respectful, confident voice to the table and help foster candid, constructive debate across teams.</p>
+            <div class="ref-person">
+              <span class="ref-name">Casie M.</span>
+              <span class="ref-title">Principal UX Researcher, Fidelity Investments</span>
+            </div>
+          </div>
+
+          <div class="ref-card" data-pos="hidden">
+            <p class="ref-quote">Emily's dedication and strategic thinking have been instrumental in driving meaningful progress. Her contributions are highly valued, and this quarter's achievements provide quality results for the Student Debt product area.</p>
+            <div class="ref-person">
+              <span class="ref-name">John R.</span>
+              <span class="ref-title">UXD Chapter Lead, Fidelity Investments</span>
+            </div>
+          </div>
+
+        </div>
+        <div class="ref-nav" id="refNav">
+          <div class="ref-dot active" data-i="0"></div>
+          <div class="ref-dot" data-i="1"></div>
+          <div class="ref-dot" data-i="2"></div>
+          <div class="ref-dot" data-i="3"></div>
+          <div class="ref-dot" data-i="4"></div>
+        </div>
+      </div>
+
+
+    </div>
+  </section>
+
+  <!-- ─── Contact ──────────────────────────────────────────────── -->
+  <section class="contact-section" id="contact">
+    <div class="container">
+      <p class="label">Contact</p>
+      <h2 class="h2">Let's make something<br>worth using.</h2>
+      <p class="body">If you're working on something that could genuinely make life easier for people, I'd love to hear about it.</p>
+      <div class="contact-actions">
+        <a href="mailto:emilydtwiddy@gmail.com?subject=Hey Emily — let's connect" class="btn btn-filled">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M1 4l6 4.5L13 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          emilydtwiddy@gmail.com
+        </a>
+        <a href="https://www.linkedin.com/in/emily-twiddy-a3809417a/" target="_blank" rel="noopener" class="btn">LinkedIn</a>
+      </div>
+      <p class="contact-note" style="margin-top:32px;">Open to new opportunities</p>
+    </div>
+  </section>
+
+  <!-- ─── Footer ───────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="container">
+      <p class="footer-left">© 2026 Emily Twiddy</p>
+      <nav class="footer-links">
+        <a href="#work">Work</a>
+        <a href="#about">About</a>
+        <a href="#resume">Experience</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- ─── Scripts ──────────────────────────────────────────────── -->
+  <script>
+
+    // Hamburger menu
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+    });
+    document.querySelectorAll('.mobile-link').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        mobileMenu.classList.remove('open');
+      });
+    });
+
+    // References orbital carousel
+    (function() {
+      const cards = document.querySelectorAll('#refOrbital .ref-card');
+      const dots  = document.querySelectorAll('#refNav .ref-dot');
+      const n = cards.length;
+      let active = 0;
+
+      function render() {
+        cards.forEach((card, i) => {
+          const pos = (i - active + n) % n;
+          card.setAttribute('data-pos', pos < 3 ? pos : 'hidden');
+          card.style.pointerEvents = pos === 0 ? 'auto' : 'none';
+        });
+        dots.forEach((d, i) => d.classList.toggle('active', i === active));
+      }
+
+      function advance(dir) { active = (active + dir + n) % n; render(); }
+
+      // Click left half → prev, right half → next on background
+      document.getElementById('refOrbital').addEventListener('click', e => {
+        if (e.target.closest('.ref-card[data-pos="0"]')) return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        advance(e.clientX < rect.left + rect.width / 2 ? -1 : 1);
+      });
+
+      // Dot nav
+      dots.forEach(d => d.addEventListener('click', () => {
+        active = +d.dataset.i; render();
+      }));
+
+      // Auto-advance
+      setInterval(() => advance(1), 5000);
+      render();
+    })();
+
+    // Nav border on scroll
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 10);
+    }, { passive: true });
+
+    // Hero entrance — staggered on load
+    document.querySelectorAll('.hero-enter').forEach(el => {
+      const delay = parseInt(el.style.getPropertyValue('--d') || '0');
+      setTimeout(() => el.classList.add('visible'), delay + 80);
+    });
+
+    // Count-up animation for stats
+    function countUp(el) {
+      const target = parseInt(el.dataset.count, 10);
+      const suffix = el.dataset.suffix || '';
+      const duration = 900;
+      const startTime = performance.now();
+      function update(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        // ease-out cubic
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(eased * target) + suffix;
+        if (progress < 1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+    }
+
+    // Trigger count-up after the hero stats have entered
+    const statsEl = document.querySelector('.hero-stats');
+    if (statsEl) {
+      const heroDelay = parseInt(statsEl.style.getPropertyValue('--d') || '0');
+      setTimeout(() => {
+        statsEl.querySelectorAll('[data-count]').forEach(countUp);
+      }, heroDelay + 300);
+    }
+
+    // Experience tabs
+    document.querySelectorAll('.exp-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.exp-tab').forEach(t => {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        document.querySelectorAll('.exp-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+        document.getElementById(tab.dataset.panel).classList.add('active');
+      });
+    });
+
+    // Scroll fade-up
+    const observer = new IntersectionObserver(
+      entries => entries.forEach(e => {
+        if (e.isIntersecting) {
+          const delay = e.target.style.getPropertyValue('--delay') || '0ms';
+          setTimeout(() => e.target.classList.add('visible'), parseInt(delay));
+          observer.unobserve(e.target);
+        }
+      }),
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    );
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // Scroll progress bar
+    const progressBar = document.getElementById('scrollProgress');
+    window.addEventListener('scroll', () => {
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      progressBar.style.width = (window.scrollY / total * 100) + '%';
+    }, { passive: true });
+
+    // Process steps — staggered entrance
+    const stepObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const steps = e.target.querySelectorAll('.process-step');
+          steps.forEach((step, i) => {
+            setTimeout(() => step.classList.add('step-visible'), i * 100);
+          });
+          stepObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    const processGrid = document.querySelector('.process-grid');
+    if (processGrid) stepObserver.observe(processGrid);
+
+    // Skill pills — staggered wave on scroll
+    const pillObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('pills-visible');
+          const pills = e.target.querySelectorAll('.skill-pill');
+          pills.forEach((pill, i) => {
+            pill.style.transitionDelay = (i * 35) + 'ms';
+          });
+          pillObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    document.querySelectorAll('.skills-list').forEach(el => pillObserver.observe(el));
+
+    // Project card 3D tilt on mouse move
+    document.querySelectorAll('.project-card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        card.style.transform = `translateY(-4px) rotateX(${-y * 6}deg) rotateY(${x * 6}deg)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+
+    // Magnetic buttons
+    document.querySelectorAll('.btn').forEach(btn => {
+      btn.addEventListener('mousemove', e => {
+        const rect = btn.getBoundingClientRect();
+        const x = (e.clientX - rect.left - rect.width / 2) * 0.25;
+        const y = (e.clientY - rect.top - rect.height / 2) * 0.25;
+        btn.style.transform = `translate(${x}px, ${y}px)`;
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = '';
+        btn.style.transition = 'transform 0.4s cubic-bezier(0.16,1,0.3,1), background 0.18s ease, border-color 0.18s ease, color 0.18s ease';
+      });
+      btn.addEventListener('mouseenter', () => {
+        btn.style.transition = 'transform 0.1s ease, background 0.18s ease, border-color 0.18s ease, color 0.18s ease';
+      });
+    });
+  </script>
+
+  <!-- ─── Currently: config + auto-fetch covers ───────────────────── -->
+  <script>
+    /* ── EDIT THIS to update what you're listening to / reading ── */
+    /* For books: add cover: 'https://...' with any image URL to skip the search */
+    const CURRENTLY = {
+      music: [
+        { title: 'Carry On',                artist: 'Jungle',        spotify: 'https://open.spotify.com/track/6bsxDgpU5nlcHNZYtsfZG8' },
+        { title: 'All The Things She Said', artist: 'Harrison',      spotify: 'https://open.spotify.com/track/1U0uIBaQzTnXVMJRLfYvEh' },
+        { title: 'Season 2 Weight Loss',    artist: 'Harry Styles',  spotify: 'https://open.spotify.com/track/3RqbkMOJIBPC6FPzWZKCGo' },
+      ],
+      books: [
+        { title: 'The Correspondent', author: 'Virginia Evans',  cover: 'https://covers.openlibrary.org/b/id/15097207-L.jpg' },
+        { title: 'Tom Lake',          author: 'Ann Patchett',    cover: 'https://covers.openlibrary.org/b/id/13454692-L.jpg' },
+        { title: 'This Story Might Save Your Life',              cover: 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1748929782i/231126887._SY475_.jpg' },
+      ]
+    };
+    /* ───────────────────────────────────────────────────────────── */
+
+    // ── iTunes fetch: returns { artUrl, previewUrl }
+    async function fetchITunes(title, artist) {
+      try {
+        const q = encodeURIComponent(`${artist} ${title}`);
+        const res = await fetch(`https://itunes.apple.com/search?term=${q}&entity=song&limit=1&media=music`);
+        const data = await res.json();
+        const r = data.results?.[0];
+        if (r) return {
+          artUrl: r.artworkUrl100.replace('100x100bb', '600x600bb'),
+          previewUrl: r.previewUrl || null
+        };
+      } catch {}
+      return { artUrl: null, previewUrl: null };
+    }
+
+    // ── Book cover fetch
+    async function fetchBookCover(title, author) {
+      // Try Open Library (no fields restriction — cover_i only appears in full response)
+      try {
+        const q = encodeURIComponent(author ? `${title} ${author}` : title);
+        const res = await fetch(`https://openlibrary.org/search.json?q=${q}&limit=5`);
+        const data = await res.json();
+        const hit = data.docs?.find(d => d.cover_i);
+        if (hit?.cover_i) return `https://covers.openlibrary.org/b/id/${hit.cover_i}-L.jpg`;
+      } catch {}
+      // Try Google Books
+      try {
+        const q = encodeURIComponent(author ? `${title} ${author}` : title);
+        const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=5`);
+        const data = await res.json();
+        for (const item of data.items || []) {
+          const links = item.volumeInfo?.imageLinks;
+          if (links) {
+            const raw = links.thumbnail || links.smallThumbnail;
+            if (raw) return raw.replace('http:', 'https:').replace('&edge=curl', '').replace(/zoom=\d/, 'zoom=1');
+          }
+        }
+      } catch {}
+      return null;
+    }
+
+    // ── Single shared audio element
+    let activePlayer = null;
+    const sharedAudio = new Audio();
+    sharedAudio.addEventListener('ended', () => {
+      if (activePlayer) {
+        activePlayer.classList.remove('playing');
+        const b = activePlayer.querySelector('.vinyl-play-btn');
+        if (b) b.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="white"><polygon points="4,2 12,7 4,12"/></svg>`;
+        activePlayer = null;
+      }
+    });
+
+    // ── Build vinyl player element
+    function makeVinyl({ title, artist }) {
+      const el = document.createElement('div');
+      el.className = 'vinyl-player';
+      el.tabIndex = 0;
+      el.innerHTML = `
+        <div class="vinyl-disc"></div>
+        <div class="vinyl-sleeve cover-loading"></div>
+        <div class="vinyl-play-btn">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="white"><polygon points="4,2 12,7 4,12" class="play-icon"/></svg>
+        </div>
+        <div class="vinyl-label"><strong>${title}</strong>${artist}</div>`;
+      return el;
+    }
+
+    // ── Build book element
+    function makeBook({ title, author }) {
+      const el = document.createElement('div');
+      el.className = 'book-item';
+      el.tabIndex = 0;
+      el.innerHTML = `
+        <div class="book-pages"></div>
+        <div class="book-inside">
+          <div class="book-inside-title">${title}</div>
+          ${author ? `<div class="book-inside-author">${author}</div>` : ''}
+        </div>
+        <div class="book-cover cover-loading"></div>`;
+      return el;
+    }
+
+    (async () => {
+      const musicRow = document.getElementById('musicRow');
+      const bookRow  = document.getElementById('bookRow');
+
+      // Build vinyl players
+      const vinylItems = CURRENTLY.music.map(track => {
+        const el = makeVinyl(track);
+        musicRow.appendChild(el);
+        return { el, ...track };
+      });
+
+      // Build books
+      const bookItems = CURRENTLY.books.map(book => {
+        const el = makeBook(book);
+        bookRow.appendChild(el);
+        return { el, ...book };
+      });
+
+      // Fire all fetches independently — each updates its own element as it resolves
+      function applyBookCover(cover, url, title) {
+        cover.classList.remove('cover-loading');
+        if (url) {
+          const img = new Image();
+          img.alt = title;
+          img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+          img.src = url;
+          cover.appendChild(img);
+        } else {
+          cover.style.background = 'var(--bg-card)';
+        }
+      }
+
+      vinylItems.forEach(({ el, title, artist }) => {
+        const sleeve = el.querySelector('.vinyl-sleeve');
+        let previewUrl = null;
+
+        function updateIcon(player, playing) {
+          const b = player.querySelector('.vinyl-play-btn');
+          b.innerHTML = playing
+            ? `<svg width="14" height="14" viewBox="0 0 14 14" fill="white"><rect x="3" y="2" width="3" height="10" rx="1"/><rect x="8" y="2" width="3" height="10" rx="1"/></svg>`
+            : `<svg width="14" height="14" viewBox="0 0 14 14" fill="white"><polygon points="4,2 12,7 4,12"/></svg>`;
+        }
+
+        el.addEventListener('click', () => {
+          const isThis = activePlayer === el;
+          if (activePlayer) { activePlayer.classList.remove('playing'); updateIcon(activePlayer, false); }
+          if (!previewUrl) return;
+          if (isThis) { sharedAudio.pause(); activePlayer = null; }
+          else {
+            sharedAudio.src = previewUrl; sharedAudio.currentTime = 0; sharedAudio.play();
+            activePlayer = el; el.classList.add('playing'); updateIcon(el, true);
+          }
+        });
+
+        fetchITunes(title, artist).then(({ artUrl, previewUrl: pUrl }) => {
+          previewUrl = pUrl;
+          sleeve.classList.remove('cover-loading');
+          if (artUrl) sleeve.innerHTML = `<img src="${artUrl}" alt="${title}" loading="lazy" />`;
+          else sleeve.style.cssText = 'background:var(--bg-card);';
+        });
+      });
+
+      bookItems.forEach(({ el, title, author, cover: coverUrl }) => {
+        const cover = el.querySelector('.book-cover');
+        if (coverUrl) {
+          // Direct URL provided — use immediately, no fetch needed
+          applyBookCover(cover, coverUrl, title);
+        } else {
+          fetchBookCover(title, author).then(url => applyBookCover(cover, url, title));
+        }
+      });
+    })();
+  </script>
+
+  <!-- ─── About deck carousel ─────────────────────────────────────── -->
+  <script>
+    (function () {
+      const cards = Array.from(document.querySelectorAll('.deck-card'));
+      const counter = document.getElementById('deckCounter');
+      const N = cards.length;
+      let active = 0;
+
+      function render() {
+        cards.forEach((card, i) => {
+          card.dataset.pos = ((i - active) % N + N) % N;
+        });
+        counter.textContent = `${active + 1} / ${N}`;
+      }
+
+      document.getElementById('deckNext').addEventListener('click', () => {
+        active = (active + 1) % N;
+        render();
+      });
+      document.getElementById('deckPrev').addEventListener('click', () => {
+        active = (active - 1 + N) % N;
+        render();
+      });
+
+      render();
+    })();
+  </script>
+
+  <!-- ─── Hero typewriter + flipping text ─────────────────────────── -->
+  <script>
+    // Flipping subtitle
+    (function () {
+      const lines = [
+        "I'm a user experience designer.",
+        "I have a meticulous eye for detail.",
+        "I turn complex problems into beautiful, user-friendly solutions.",
+        "I focus on solutions that add value for the user and the business.",
+        "Good design doesn't just look good, it delivers real results.",
+        "I'm currently designing at Fidelity Investments.",
+      ];
+      const el = document.getElementById('heroFlip');
+      if (!el) return;
+      let idx = 0;
+      function flip() {
+        el.classList.add('flip-exit');
+        setTimeout(() => {
+          idx = (idx + 1) % lines.length;
+          el.textContent = lines[idx];
+          el.classList.remove('flip-exit');
+          el.classList.add('flip-enter');
+          requestAnimationFrame(() => requestAnimationFrame(() => {
+            el.classList.remove('flip-enter');
+          }));
+        }, 450);
+      }
+      setInterval(flip, 3200);
+    })();
+
+  </script>
+
+  <!-- ─── Blur hide on footer ─────────────────────────────────────── -->
+  <script>
+    const blurEl = document.querySelector('.gradual-blur');
+    const footerEl = document.querySelector('.footer');
+    if (blurEl && footerEl) {
+      const obs = new IntersectionObserver(([e]) => {
+        blurEl.classList.toggle('hidden', e.isIntersecting);
+      }, { threshold: 0.01 });
+      obs.observe(footerEl);
+    }
+  </script>
+
+  <!-- ─── Cursor glow ──────────────────────────────────────────── -->
+  <div class="cursor-glow" id="cursorGlow"></div>
+  <script>
+    const glow = document.getElementById('cursorGlow');
+    // accent colors matching card tokens: parchment, sage, lavender, sand
+    const glowColors = [
+      '242,172,132',  // parchment-warm
+      '140,180,145',  // sage
+      '180,155,210',  // dusty lavender
+      '210,175,140',  // warm sand
+    ];
+    let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+    let cx = mx, cy = my;
+    window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+    (function animate() {
+      cx += (mx - cx) * 0.08;
+      cy += (my - cy) * 0.08;
+      // pick color based on horizontal position across viewport
+      const t = cx / window.innerWidth * (glowColors.length - 1);
+      const i = Math.floor(t);
+      const f = t - i;
+      const a = glowColors[Math.min(i, glowColors.length - 1)].split(',').map(Number);
+      const b = glowColors[Math.min(i + 1, glowColors.length - 1)].split(',').map(Number);
+      const r = Math.round(a[0] + (b[0] - a[0]) * f);
+      const g = Math.round(a[1] + (b[1] - a[1]) * f);
+      const bl = Math.round(a[2] + (b[2] - a[2]) * f);
+      glow.style.background = `radial-gradient(circle, rgba(${r},${g},${bl},0.38) 0%, transparent 70%)`;
+      glow.style.transform = `translate(${cx - 140}px, ${cy - 140}px)`;
+      requestAnimationFrame(animate);
+    })();
+  </script>
+
+</body>
+</html>

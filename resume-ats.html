@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Emily Twiddy — Resume</title>
+  <style>
+    /* Clean, single-column, ATS-safe layout */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11pt;
+      line-height: 1.5;
+      color: #000;
+      background: #fff;
+      padding: 0;
+    }
+
+    .page {
+      width: 8.5in;
+      min-height: 11in;
+      margin: 0 auto;
+      padding: 0.75in 0.75in;
+    }
+
+    /* Header */
+    .header { margin-bottom: 20px; }
+    .header h1 {
+      font-size: 22pt;
+      font-weight: bold;
+      letter-spacing: 0;
+    }
+    .header-title {
+      font-size: 12pt;
+      color: #333;
+      margin-top: 2px;
+    }
+    .header-contact {
+      margin-top: 6px;
+      font-size: 10pt;
+      color: #333;
+      line-height: 1.8;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #000;
+      margin: 14px 0;
+    }
+
+    /* Section headings */
+    h2 {
+      font-size: 11pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+      margin-top: 20px;
+    }
+
+    /* Experience */
+    .exp-item { margin-bottom: 16px; }
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .exp-company { font-weight: bold; font-size: 11pt; }
+    .exp-dates { font-size: 10pt; color: #333; }
+    .exp-role { font-size: 10.5pt; color: #333; font-style: italic; margin-bottom: 4px; }
+    .exp-bullets { padding-left: 18px; margin-top: 4px; }
+    .exp-bullets li { font-size: 10pt; color: #000; line-height: 1.6; margin-bottom: 2px; }
+
+    /* Education */
+    .edu-item { margin-bottom: 12px; }
+    .edu-degree { font-weight: bold; font-size: 10.5pt; }
+    .edu-detail { font-size: 10pt; color: #333; }
+
+    /* Skills */
+    .skills-block { margin-bottom: 8px; }
+    .skills-block strong { font-size: 10.5pt; }
+    .skills-block p { font-size: 10pt; color: #000; margin-top: 2px; }
+
+    @media print {
+      body { background: #fff; }
+      .page { width: 100%; padding: 0.65in 0.7in; }
+    }
+    @page { size: letter; margin: 0; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>Emily Twiddy</h1>
+    <p class="header-title">Senior UX Designer</p>
+    <div class="header-contact">
+      emilydtwiddy@gmail.com &nbsp;|&nbsp; (828) 514-7614 &nbsp;|&nbsp; emilytwiddy.com &nbsp;|&nbsp; linkedin.com/in/emily-twiddy-a3809417a
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Summary -->
+  <h2>Summary</h2>
+  <p style="font-size:10pt;color:#000;line-height:1.65;">Digital Experience Designer with 5+ years of experience balancing user needs, business goals, and technical feasibility across 8+ industries and 18+ shipped projects. Currently designing at Fidelity Investments, focused on making complex financial tools feel clear and easy to use. Experienced collaborating with data science, engineering, legal, marketing, and product teams to ship research-validated designs at scale.</p>
+
+  <hr>
+
+  <!-- Experience -->
+  <h2>Experience</h2>
+
+  <div class="exp-item">
+    <div class="exp-header">
+      <span class="exp-company">Fidelity Investments</span>
+      <span class="exp-dates">2023 – Present</span>
+    </div>
+    <p class="exp-role">Senior UX Designer</p>
+    <ul class="exp-bullets">
+      <li>Redesigned the Student Debt Retirement enrollment flow, lifting automated verification rates by 60% and enrollment success by 30%.</li>
+      <li>Introduced interactive guidance, radio-tile loan servicer selection, and real-time PDF data extraction, eliminating a 5-day manual review wait.</li>
+      <li>Redesigned the benefit management dashboard to surface benefit value and drive post-enrollment engagement, achieving 100% task success in usability testing.</li>
+      <li>Partnered with data science, engineering, legal, marketing, and product to deliver research-validated designs at scale.</li>
+    </ul>
+  </div>
+
+  <div class="exp-item">
+    <div class="exp-header">
+      <span class="exp-company">Fidelity Investments</span>
+      <span class="exp-dates">2022 – 2023</span>
+    </div>
+    <p class="exp-role">UX Designer</p>
+    <ul class="exp-bullets">
+      <li>Contributed to the end-to-end design of student debt workplace benefit products.</li>
+      <li>Partnered with cross-functional stakeholders to define design direction and validate solutions through user research.</li>
+    </ul>
+  </div>
+
+  <div class="exp-item">
+    <div class="exp-header">
+      <span class="exp-company">NC State University, College of Design</span>
+      <span class="exp-dates">2021 – 2022</span>
+    </div>
+    <p class="exp-role">Graduate Teaching Assistant</p>
+    <ul class="exp-bullets">
+      <li>Supported UX and graphic design curriculum, mentored students, and assisted faculty with course instruction.</li>
+    </ul>
+  </div>
+
+  <div class="exp-item">
+    <div class="exp-header">
+      <span class="exp-company">The Lunz Group</span>
+      <span class="exp-dates">2018 – 2020</span>
+    </div>
+    <p class="exp-role">Graphic Designer</p>
+    <ul class="exp-bullets">
+      <li>Designed visual communication and brand assets across multiple client projects.</li>
+    </ul>
+  </div>
+
+  <div class="exp-item">
+    <div class="exp-header">
+      <span class="exp-company">Southeastern University, Marketing Department</span>
+      <span class="exp-dates">2017 – 2020</span>
+    </div>
+    <p class="exp-role">Graduate Design Assistant</p>
+    <ul class="exp-bullets">
+      <li>Created marketing and design materials supporting university communications and events.</li>
+    </ul>
+  </div>
+
+  <div class="exp-item">
+    <div class="exp-header">
+      <span class="exp-company">Independent</span>
+      <span class="exp-dates">2015 – Present</span>
+    </div>
+    <p class="exp-role">Freelance Designer</p>
+    <ul class="exp-bullets">
+      <li>UX, UI, and graphic design work across a range of industries and client types.</li>
+    </ul>
+  </div>
+
+  <hr>
+
+  <!-- Education -->
+  <h2>Education</h2>
+
+  <div class="edu-item">
+    <p class="edu-degree">Master of Graphic and Experience Design (MGXD)</p>
+    <p class="edu-detail">North Carolina State University, 2022</p>
+  </div>
+
+  <div class="edu-item">
+    <p class="edu-degree">Master of Business Administration (MBA)</p>
+    <p class="edu-detail">Southeastern University, 2020</p>
+  </div>
+
+  <div class="edu-item">
+    <p class="edu-degree">Bachelor of Science, Business Marketing</p>
+    <p class="edu-detail">Minor: Graphic Design — Southeastern University, 2019</p>
+  </div>
+
+  <hr>
+
+  <!-- Skills -->
+  <h2>Skills</h2>
+
+  <div class="skills-block">
+    <strong>Design:</strong>
+    <p>UX Design, UI Design, Product Design, Interaction Design, Design Systems, Prototyping, UX Research, Usability Testing, Journey Mapping, Accessible Design, A11Y, Workshops, Mentoring</p>
+  </div>
+
+  <div class="skills-block">
+    <strong>Tools:</strong>
+    <p>Figma, Adobe Creative Cloud, Microsoft Suite, Google Suite, Slack, Notion</p>
+  </div>
+
+</div>
+</body>
+</html>

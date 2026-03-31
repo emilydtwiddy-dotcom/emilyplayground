@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Benefit Enrollment Redesign — Emily Twiddy</title>
+  <meta name="description" content="How I redesigned Fidelity Investments' student debt benefit enrollment flow, lifting auto-verification by 60% and enrollment success by 30%." />
+
+  <style>
+    :root {
+      --bg:          #faf9f7;
+      --bg-card:     #f4f2ee;
+      --ink:         #1c1b19;
+      --ink-2:       #5a5650;
+      --ink-3:       #9a948c;
+      --border:      #e5e0d8;
+      --border-dark: #ccc8c0;
+      --card-a:      #f2ece4;
+      --radius-pill: 9999px;
+      --radius-card: 16px;
+      --transition:  0.18s ease;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--ink); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    ul { list-style: none; }
+
+    /* ─── Typography ─────────────────────────────────────────── */
+    .label {
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .h1 { font-size: clamp(2rem, 4.5vw, 3.2rem); font-weight: 500; letter-spacing: -0.03em; line-height: 1.12; }
+    .h2 { font-size: clamp(1.4rem, 2.5vw, 2rem); font-weight: 500; letter-spacing: -0.025em; line-height: 1.2; }
+    .h3 { font-size: 1.0625rem; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 10px; }
+    .body-lg { font-size: 1.0625rem; color: var(--ink-2); line-height: 1.75; }
+    .body { font-size: 1rem; color: var(--ink-2); line-height: 1.75; }
+    .body-sm { font-size: 0.875rem; color: var(--ink-2); line-height: 1.7; }
+
+    /* ─── Layout ─────────────────────────────────────────────── */
+    .container { width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 32px; }
+    .container-narrow { width: 100%; max-width: 720px; margin: 0 auto; padding: 0 32px; }
+    @media (max-width: 640px) { .container, .container-narrow { padding: 0 20px; } }
+
+    /* ─── Buttons ─────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 22px; border-radius: var(--radius-pill);
+      border: 1px solid var(--border-dark); font-size: 0.875rem;
+      font-weight: 450; background: transparent; cursor: pointer;
+      transition: background var(--transition), border-color var(--transition), color var(--transition);
+      white-space: nowrap;
+    }
+    .btn:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .btn-filled { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .btn-filled:hover { background: #3a3830; border-color: #3a3830; }
+
+    /* ─── Tags ───────────────────────────────────────────────── */
+    .tag {
+      font-size: 0.75rem; padding: 3px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border); color: var(--ink-2);
+    }
+
+    /* ─── Nav ────────────────────────────────────────────────── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 60px; display: flex; align-items: center;
+      background: rgba(250,249,247,0.88);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s;
+    }
+    .nav.scrolled { border-bottom-color: var(--border); }
+    .nav .container { display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 0.9375rem; font-weight: 500; color: var(--ink);
+      transition: opacity var(--transition);
+    }
+    .nav-logo:hover { opacity: 0.6; }
+    .nav-logo-text { font-size: 0.9375rem; font-weight: 500; }
+    .nav-links { display: flex; align-items: center; gap: 8px; }
+    .nav-links a {
+      padding: 6px 14px; border-radius: var(--radius-pill);
+      font-size: 0.875rem; color: var(--ink-2);
+      transition: background var(--transition), color var(--transition);
+    }
+    .nav-links a:hover { background: var(--bg-card); color: var(--ink); }
+    .nav-links .nav-cta { border: 1px solid var(--border-dark); color: var(--ink); font-weight: 450; }
+    .nav-links .nav-cta:hover { background: var(--ink); color: var(--bg); }
+    .nav-hamburger {
+      display: none; flex-direction: column; justify-content: center;
+      gap: 5px; width: 36px; height: 36px;
+      border: 1px solid var(--border-dark); border-radius: var(--radius-pill);
+      padding: 8px; background: transparent; cursor: pointer;
+    }
+    .nav-hamburger span { display: block; height: 1px; background: var(--ink); transition: transform 0.2s, opacity 0.2s; }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+    .nav-mobile-menu {
+      display: none; position: fixed; top: 60px; left: 0; right: 0;
+      background: var(--bg); border-bottom: 1px solid var(--border);
+      padding: 12px 20px 16px; z-index: 99; flex-direction: column; gap: 4px;
+    }
+    .nav-mobile-menu.open { display: flex; }
+    .nav-mobile-menu a {
+      padding: 10px 14px; border-radius: 10px; font-size: 0.9375rem;
+      color: var(--ink-2); transition: background var(--transition), color var(--transition);
+    }
+    .nav-mobile-menu a:hover { background: var(--bg-card); color: var(--ink); }
+    .nav-mobile-menu .nav-cta { margin-top: 4px; border: 1px solid var(--border-dark); color: var(--ink); font-weight: 450; text-align: center; }
+    @media (max-width: 600px) { .nav-links { display: none; } .nav-hamburger { display: flex; } }
+
+    /* ─── Hero ───────────────────────────────────────────────── */
+    .cs-hero {
+      padding: 120px 0 80px;
+      border-bottom: 1px solid var(--border);
+    }
+    .cs-hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+    .cs-hero h1 { max-width: 760px; margin-bottom: 24px; }
+    .cs-hero-sub { max-width: 600px; margin-bottom: 48px; }
+    .cs-hero-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+    }
+    @media (max-width: 640px) { .cs-hero-stats { grid-template-columns: 1fr 1fr; } }
+    .cs-stat { padding: 24px 28px; border-right: 1px solid var(--border); }
+    .cs-stat:last-child { border-right: none; }
+    @media (max-width: 640px) {
+      .cs-stat:nth-child(even) { border-right: none; }
+      .cs-stat:nth-child(1), .cs-stat:nth-child(2) { border-bottom: 1px solid var(--border); }
+    }
+    .cs-stat-num { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 500; letter-spacing: -0.03em; margin-bottom: 4px; }
+    .cs-stat-label { font-size: 0.8125rem; color: var(--ink-3); line-height: 1.4; }
+
+    /* ─── Chapter heading ────────────────────────────────────── */
+    .chapter {
+      padding: 80px 0 0;
+      border-top: 1px solid var(--border);
+    }
+    .chapter-title {
+      font-size: clamp(2.4rem, 6vw, 5rem);
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      color: var(--ink);
+      padding-bottom: 48px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ─── Numbered section cards ─────────────────────────────── */
+    .section-cards { display: flex; flex-direction: column; gap: 0; }
+
+    .section-card {
+      border-bottom: 1px solid var(--border);
+      padding: 40px 0;
+    }
+    .section-card-inner {
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+    @media (max-width: 640px) {
+      .section-card-inner { grid-template-columns: 1fr; gap: 16px; }
+    }
+    .section-card-num {
+      font-size: 0.75rem; font-weight: 500;
+      letter-spacing: 0.08em; color: var(--ink-3);
+      padding-top: 6px;
+    }
+    .section-card-body {}
+    .section-card-body h2 {
+      font-size: clamp(1.4rem, 2.5vw, 1.875rem);
+      font-weight: 500;
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .section-card-body p { font-size: 1rem; color: var(--ink-2); line-height: 1.75; }
+    .section-card-body p + p { margin-top: 14px; }
+
+    /* ─── Problem flow strip ──────────────────────────────────── */
+    .flow-strip {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      padding: 40px 0;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+    }
+    .flow-item {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-shrink: 0;
+    }
+    .flow-node {
+      padding: 10px 18px;
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-pill);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--ink);
+      white-space: nowrap;
+      background: var(--bg);
+    }
+    .flow-arrow {
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      color: var(--ink-3);
+    }
+
+    /* ─── Full-width media ───────────────────────────────────── */
+    .media-block {
+      padding: 40px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .media-block-inner {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      background: var(--bg-card);
+    }
+    .media-block img,
+    .media-block video {
+      width: 100%;
+      display: block;
+    }
+    .media-block-caption {
+      padding: 12px 16px;
+      font-size: 0.8125rem;
+      color: var(--ink-3);
+      border-top: 1px solid var(--border);
+    }
+
+    /* ─── Goal list ──────────────────────────────────────────── */
+    .goal-list { display: flex; flex-direction: column; margin-top: 8px; }
+    .goal-item {
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 1.0625rem;
+      color: var(--ink-2);
+      line-height: 1.5;
+    }
+    .goal-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+    /* ─── Research list ───────────────────────────────────────── */
+    .research-list { display: flex; flex-direction: column; margin-top: 8px; }
+    .research-item {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9375rem;
+      color: var(--ink-2);
+      line-height: 1.6;
+    }
+    .research-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+    /* ─── Phase cards (stacked, large video) ─────────────────── */
+    .solutions-section {
+      border-top: 1px solid var(--border);
+    }
+    .phase-card-full {
+      border-bottom: 1px solid var(--border);
+      padding: 0 0 40px;
+    }
+    .phase-card-video {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      background: var(--bg-card);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .phase-card-video video {
+      width: 100%;
+      display: block;
+      max-height: 600px;
+      object-fit: contain;
+      background: var(--bg-card);
+    }
+    .phase-card-body {
+      padding: 32px 40px;
+    }
+    @media (max-width: 640px) { .phase-card-body { padding: 24px 20px; } }
+    .phase-card-header-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .phase-card-title-group { display: flex; align-items: baseline; gap: 14px; }
+    .phase-num { font-size: 0.75rem; color: var(--ink-3); font-weight: 500; letter-spacing: 0.06em; }
+    .phase-title { font-size: 1.125rem; font-weight: 500; letter-spacing: -0.01em; }
+    .phase-metric-inline {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      flex-shrink: 0;
+    }
+    .phase-metric-sub { font-size: 0.8125rem; color: var(--ink-3); text-align: right; }
+    .phase-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0; }
+    .phase-desc { font-size: 0.9375rem; color: var(--ink-2); line-height: 1.7; }
+    .phase-desc + .phase-desc { margin-top: 10px; }
+    .phase-impact {
+      margin-top: 16px;
+      padding: 14px 18px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.875rem;
+      color: var(--ink-2);
+      line-height: 1.65;
+    }
+    .phase-impact strong { font-weight: 500; color: var(--ink); }
+
+    /* ─── Results section ────────────────────────────────────── */
+    .results-section {
+      border-top: 1px solid var(--border);
+      padding: 80px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .results-chapter-title {
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 56px;
+    }
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+    }
+    @media (max-width: 700px) { .results-grid { grid-template-columns: 1fr 1fr; } }
+    .result-item {
+      padding: 28px 28px;
+      border-right: 1px solid var(--border);
+    }
+    .result-item:last-child { border-right: none; }
+    @media (max-width: 700px) {
+      .result-item:nth-child(even) { border-right: none; }
+      .result-item:nth-child(1), .result-item:nth-child(2) { border-bottom: 1px solid var(--border); }
+    }
+    .result-num {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .result-label { font-size: 0.8125rem; color: var(--ink-3); line-height: 1.5; }
+
+    /* ─── Quote ──────────────────────────────────────────────── */
+    .callout {
+      background: var(--card-a);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      padding: 32px 36px;
+      margin: 40px 0 0;
+    }
+    .callout p { font-size: 1.0rem; color: var(--ink); line-height: 1.7; font-style: italic; }
+    .callout-attr { margin-top: 12px; font-size: 0.8125rem; color: var(--ink-3); font-style: normal; }
+
+    /* ─── Learnings ──────────────────────────────────────────── */
+    .learnings-section {
+      padding: 80px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .learnings-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 40px;
+    }
+    @media (max-width: 700px) { .learnings-grid { grid-template-columns: 1fr; } }
+    .learning-card {
+      padding: 28px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+    }
+    .learning-num { font-size: 0.75rem; color: var(--ink-3); font-weight: 500; letter-spacing: 0.06em; margin-bottom: 12px; }
+    .learning-title { font-size: 1rem; font-weight: 500; margin-bottom: 10px; }
+    .learning-body { font-size: 0.875rem; color: var(--ink-2); line-height: 1.65; font-style: italic; }
+
+    /* ─── Next / Footer ──────────────────────────────────────── */
+    .cs-next { padding: 80px 0; }
+    .cs-next-inner {
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 32px; flex-wrap: wrap;
+    }
+    .footer { padding: 32px 0; border-top: 1px solid var(--border); }
+    .footer .container { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .footer-left { font-size: 0.875rem; color: var(--ink-3); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 0.875rem; color: var(--ink-3); transition: color var(--transition); }
+    .footer-links a:hover { color: var(--ink); }
+    @media (max-width: 480px) { .footer .container { flex-direction: column; gap: 12px; } }
+
+    /* ─── Scroll animation ───────────────────────────────────── */
+    .fade-up { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .fade-up.visible { opacity: 1; transform: none; }
+    /* ─── Cursor glow ────────────────────────────────────────── */
+    .cursor-glow {
+      pointer-events: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(180,160,130,0.12) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      transition: opacity 0.3s ease;
+      will-change: transform;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── Nav ─────────────────────────────────────────────────── -->
+  <nav class="nav" id="nav">
+    <div class="container">
+      <a href="../index.html" class="nav-logo">
+        <img src="../favicon.png" alt="" style="width:22px;height:22px;object-fit:cover;display:block;" />
+        <span class="nav-logo-text">Emily Twiddy</span>
+      </a>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <ul class="nav-links">
+          <li><a href="../index.html#work">Work</a></li>
+          <li><a href="../index.html#about">About</a></li>
+          <li><a href="../index.html#resume">Experience</a></li>
+          <li><a href="../index.html#contact" class="nav-cta">Contact</a></li>
+        </ul>
+        <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+  <div class="nav-mobile-menu" id="mobileMenu">
+    <a href="../index.html#work" class="mobile-link">Work</a>
+    <a href="../index.html#about" class="mobile-link">About</a>
+    <a href="../index.html#resume" class="mobile-link">Experience</a>
+    <a href="../index.html#contact" class="nav-cta mobile-link">Contact</a>
+  </div>
+
+  <!-- ─── Hero ─────────────────────────────────────────────────── -->
+  <header class="cs-hero">
+    <div class="container">
+      <div class="cs-hero-meta">
+        <span class="tag">UX Design</span>
+        <span class="tag">Fintech</span>
+        <span class="tag">Lead Designer</span>
+      </div>
+      <h1 class="h1">Workplace benefit enrollment<br>redesign to increase auto-verification</h1>
+      <p class="body-lg cs-hero-sub">After Fidelity Investments lost its automated loan verification partner to legislative changes, I redesigned the Student Debt Retirement enrollment flow from the ground up — guiding users to the right documents, extracting data automatically, and providing real-time feedback in-flow.</p>
+
+      <div class="cs-hero-stats">
+        <div class="cs-stat">
+          <p class="cs-stat-num">60%</p>
+          <p class="cs-stat-label">increase in loan auto-verification rates</p>
+        </div>
+        <div class="cs-stat">
+          <p class="cs-stat-num">30%</p>
+          <p class="cs-stat-label">increase in enrollment success rates</p>
+        </div>
+        <div class="cs-stat">
+          <p class="cs-stat-num">5 days</p>
+          <p class="cs-stat-label">manual ops review eliminated for most users</p>
+        </div>
+        <div class="cs-stat">
+          <p class="cs-stat-num">0</p>
+          <p class="cs-stat-label">loan servicer name typos after Phase 2</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- CHAPTER: Defining the space                                -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="chapter">
+    <div class="container">
+      <h2 class="chapter-title">Defining the space</h2>
+    </div>
+  </div>
+
+  <!-- 01 The Problem -->
+  <div class="section-cards">
+    <div class="section-card fade-up">
+      <div class="container">
+        <div class="section-card-inner">
+          <div class="section-card-num">01</div>
+          <div class="section-card-body">
+            <h2>The Problem</h2>
+            <p>Fidelity lost its automated loan verification partner due to legislative changes, disrupting the student debt benefit enrollment process. When uploaded documents failed verification, they were sent to a manual review team with a 5-day response time via chat.</p>
+            <p>This created three critical issues: participants abandoned enrollment instead of returning to resolve issues, the resolution process was confusing and outdated, and manual reviews drove up operational costs significantly.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Problem flow diagram -->
+  <div class="media-block fade-up">
+    <div class="container">
+      <div class="media-block-inner">
+        <img src="../Workplace%20benefit%20enrollment/SDR-Problem-1.gif" alt="Problem flow: Loss of data aggregation → Increasing operations cost → Users can't find right documents → Losing enrollees to 5-day SLA" />
+        <p class="media-block-caption">Root issue and friction cascade — from data partner loss to enrollment abandonment</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 02 The Challenge -->
+  <div class="section-cards">
+    <div class="section-card fade-up">
+      <div class="container">
+        <div class="section-card-inner">
+          <div class="section-card-num">02</div>
+          <div class="section-card-body">
+            <h2>The Challenge</h2>
+            <p>As the market leader in student debt workplace benefits, Fidelity faced mounting pressure as enrollment rates dropped and operational costs threatened profitability. The business model — priced per enrolled participant — made every abandonment costly.</p>
+            <p>But clients were also vocal about enrolling the <em>right</em> participants. The solution needed to guide users to correct documents, extract loan data automatically, and provide real-time feedback — all while getting to market quickly to meet key enrollment KPIs.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- CHAPTER: Process                                           -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="chapter">
+    <div class="container">
+      <h2 class="chapter-title">Process</h2>
+    </div>
+  </div>
+
+  <div class="section-cards">
+
+    <!-- 03 Alignment & Strategy -->
+    <div class="section-card fade-up">
+      <div class="container">
+        <div class="section-card-inner">
+          <div class="section-card-num">03</div>
+          <div class="section-card-body">
+            <h2>Alignment &amp; Strategy</h2>
+            <p>I started by meeting with stakeholders to understand business challenges and align on a shared vision. From there, I developed a phased experience strategy that balanced business needs with user goals.</p>
+            <p>Frequent touchpoints with technology and business partners kept momentum. Given the fast-moving environment, I ran a high-intensity discovery phase — auditing existing work, reviewing the competitive landscape, and exploring technical feasibility — simultaneously.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 Our Goals -->
+    <div class="section-card fade-up">
+      <div class="container">
+        <div class="section-card-inner">
+          <div class="section-card-num">04</div>
+          <div class="section-card-body">
+            <h2>Our goals</h2>
+            <div class="goal-list">
+              <div class="goal-item">Increase auto-verification rates</div>
+              <div class="goal-item">Improve enrollment completion</div>
+              <div class="goal-item">Reduce drop-off and timeouts</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Strategy / vision diagram -->
+  <div class="media-block fade-up">
+    <div class="container">
+      <div class="media-block-inner">
+        <img src="../Workplace%20benefit%20enrollment/SDR-Vision-2.gif" alt="Phased strategy diagram — Phase 1 through 3 and the design maturity pyramid" />
+        <p class="media-block-caption">Phased experience strategy — from upfront guidance through real-time feedback loop</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-cards">
+
+    <!-- 05 Research & Analysis -->
+    <div class="section-card fade-up">
+      <div class="container">
+        <div class="section-card-inner">
+          <div class="section-card-num">05</div>
+          <div class="section-card-body">
+            <h2>Research &amp; Analysis</h2>
+            <div class="research-list">
+              <div class="research-item">Analyzed how competitors handled similar legislative changes</div>
+              <div class="research-item">Reviewed existing research revealing two key pain points: users didn't understand the benefit's purpose and struggled to find correct documentation</div>
+              <div class="research-item">Synthesized themes from post-enrollment surveys</div>
+              <div class="research-item">Analyzed behavioral data to pinpoint drop-off points and bottlenecks</div>
+              <div class="research-item">Mapped the existing end-to-end experience to highlight friction points and opportunities for improvement</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Research analysis diagram -->
+  <div class="media-block fade-up">
+    <div class="container">
+      <div class="media-block-inner">
+        <img src="../Workplace%20benefit%20enrollment/SDR-Strategy-1.gif" alt="Research mapping: pain points, opportunities, and insights across benefit comprehension, loan verification, and finding loan documentation" />
+        <p class="media-block-caption">Mapping of pain points, opportunities, and insights from research phase</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-cards">
+
+    <!-- 06 Vision -->
+    <div class="section-card fade-up">
+      <div class="container">
+        <div class="section-card-inner">
+          <div class="section-card-num">06</div>
+          <div class="section-card-body">
+            <h2>Vision</h2>
+            <p>Through collaborative workshops with technical and business partners, we identified 3 key solutions to improve the user experience, meet internal goals, and address client concerns.</p>
+            <p>Our vision was to guide users to correct documentation and provide immediate feedback when loan verification failed, while displaying extracted data to eliminate manual entry.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Enrollment flow animation -->
+  <div class="media-block fade-up">
+    <div class="container">
+      <div class="media-block-inner">
+        <img src="../Workplace%20benefit%20enrollment/SDR-Enrollment-Scale-01.gif" alt="Enrollment scale and flow overview" />
+        <p class="media-block-caption">Enrollment experience overview — the full flow at scale</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- CHAPTER: Key Solutions                                     -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="chapter">
+    <div class="container">
+      <h2 class="chapter-title">Key solutions</h2>
+    </div>
+  </div>
+
+  <div class="solutions-section">
+
+    <!-- Phase 01: Intro page guidance -->
+    <div class="phase-card-full fade-up">
+      <div class="container">
+        <div class="phase-card-video">
+          <video autoplay muted loop playsinline>
+            <source src="../Workplace%20benefit%20enrollment/intro%20page.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="phase-card-body">
+          <div class="phase-card-header-row">
+            <div class="phase-card-title-group">
+              <span class="phase-num">Phase 01</span>
+              <span class="phase-title">Upfront Guidance</span>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <p class="phase-metric-inline">+12%</p>
+              <p class="phase-metric-sub">automation increase within two weeks</p>
+            </div>
+          </div>
+          <div class="phase-tags">
+            <span class="tag">Interactive tracker</span>
+            <span class="tag">Connected plan link</span>
+            <span class="tag">Benefit fit</span>
+            <span class="tag">Document requirements</span>
+          </div>
+          <p class="phase-desc">Our previous guidance page had large text blocks users likely skipped. Working with our enterprise patterns team, we designed an interactive component to encourage engagement with key information: benefit fit and document requirements.</p>
+          <div class="phase-impact"><strong>Impact:</strong> We added more content to the page, but changed how we presented it, receiving positive client feedback: <em>"Appreciate that Fidelity is being intentional about enrolling the right fit participants, not just increasing enrollment numbers."</em></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 02: Personalization -->
+    <div class="phase-card-full fade-up">
+      <div class="container">
+        <div class="phase-card-video">
+          <video autoplay muted loop playsinline>
+            <source src="../Workplace%20benefit%20enrollment/LSP%20customization.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="phase-card-body">
+          <div class="phase-card-header-row">
+            <div class="phase-card-title-group">
+              <span class="phase-num">Phase 02</span>
+              <span class="phase-title">Personalization</span>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <p class="phase-metric-inline">+22%</p>
+              <p class="phase-metric-sub">additional automation increase (34% cumulative)</p>
+            </div>
+          </div>
+          <div class="phase-tags">
+            <span class="tag">Loan servicer tile selector</span>
+            <span class="tag">Inline microcopy</span>
+            <span class="tag">Fidelity design system</span>
+          </div>
+          <p class="phase-desc">We moved guidance inline with the upload action. A loan servicer tile selector standardized the top five lenders covering 90% of loans, plus a type-ahead for others. Each servicer triggered lender-specific formatting instructions and account number guidance.</p>
+          <div class="phase-impact"><strong>Impact:</strong> Two weeks post-launch, loan servicer name typos dropped to zero and account number failures fell by 60%.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 03: Feedback loop -->
+    <div class="phase-card-full fade-up">
+      <div class="container">
+        <div class="phase-card-video">
+          <video autoplay muted loop playsinline>
+            <source src="../Workplace%20benefit%20enrollment/feedback%20loop%20full%20slow.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="phase-card-body">
+          <div class="phase-card-header-row">
+            <div class="phase-card-title-group">
+              <span class="phase-num">Phase 03</span>
+              <span class="phase-title">Feedback Loop</span>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <p class="phase-metric-inline">60% / 30%</p>
+              <p class="phase-metric-sub">total verification lift / enrollment success lift</p>
+            </div>
+          </div>
+          <div class="phase-tags">
+            <span class="tag">PDF data extraction</span>
+            <span class="tag">Real-time correction</span>
+            <span class="tag">AI-proof architecture</span>
+          </div>
+          <p class="phase-desc">We implemented real-time PDF data extraction — displaying extracted loan data back to users and instantly flagging missing or incorrect fields. Users could self-correct documents within the flow, with sample documents highlighting required fields and steps to find the right paperwork.</p>
+          <div class="phase-impact"><strong>Impact:</strong> The 5-day manual operations review was eliminated for the vast majority of participants, dramatically reducing both abandonment and operational cost.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- CHAPTER: In market                                         -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="chapter">
+    <div class="container">
+      <h2 class="chapter-title">In market</h2>
+    </div>
+  </div>
+
+  <!-- Happy path full flow video -->
+  <div class="media-block fade-up">
+    <div class="container">
+      <div class="media-block-inner">
+        <video autoplay muted loop playsinline>
+          <source src="../Workplace%20benefit%20enrollment/happy%20path%20full%20flow.mp4" type="video/mp4">
+        </video>
+        <p class="media-block-caption">Happy path — complete enrollment flow across all three phases</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="results-section fade-up">
+    <div class="container">
+      <h2 class="results-chapter-title">Three phases.<br>Real outcomes.</h2>
+      <div class="results-grid">
+        <div class="result-item">
+          <p class="result-num">60%</p>
+          <p class="result-label">increase in loan auto-verification rates</p>
+        </div>
+        <div class="result-item">
+          <p class="result-num">30%</p>
+          <p class="result-label">increase in enrollment success rates</p>
+        </div>
+        <div class="result-item">
+          <p class="result-num">5 days</p>
+          <p class="result-label">manual ops review eliminated for most users</p>
+        </div>
+        <div class="result-item">
+          <p class="result-num">0</p>
+          <p class="result-label">loan servicer name typos after Phase 2</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <p>"Appreciate that Fidelity is being intentional about enrolling the right fit participants, not just increasing enrollment numbers."</p>
+        <p class="callout-attr">— Client feedback, Phase 1 launch</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Key Learnings ─────────────────────────────────────── -->
+  <div class="learnings-section fade-up">
+    <div class="container">
+      <p class="label" style="margin-bottom:12px">Key Learnings</p>
+      <h2 class="h2" style="max-width:500px;margin-bottom:0">Three things I'd take into every project from here.</h2>
+      <div class="learnings-grid">
+        <div class="learning-card">
+          <p class="learning-num">01</p>
+          <h3 class="learning-title">Test in Market</h3>
+          <p class="learning-body">"In fast-moving markets, testing solutions in-market can be advantageous if you have development capacity to iterate quickly."</p>
+        </div>
+        <div class="learning-card">
+          <p class="learning-num">02</p>
+          <h3 class="learning-title">Goals Over Requirements</h3>
+          <p class="learning-body">"Ground work in specific goals over lengthy requirement documents. For every decision, ask if it will move the needle to meet your goal."</p>
+        </div>
+        <div class="learning-card">
+          <p class="learning-num">03</p>
+          <h3 class="learning-title">Vision First</h3>
+          <p class="learning-body">"Starting a project with technical restraints, even in a time crunch, can be limiting. Start with the best solution for the user, then scale back to what is achievable now."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Next project ────────────────────────────────────────── -->
+  <section class="cs-next">
+    <div class="container">
+      <div class="cs-next-inner">
+        <div>
+          <p class="label" style="margin-bottom:8px">Next project</p>
+          <p style="font-size:1.125rem;font-weight:500;letter-spacing:-0.01em;">Benefit Management Dashboard Redesign</p>
+        </div>
+        <a href="dashboard-redesign.html" class="btn btn-filled">
+          View next case study
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Footer ──────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="container">
+      <p class="footer-left">© 2025 Emily Twiddy</p>
+      <nav class="footer-links">
+        <a href="../index.html#work">Work</a>
+        <a href="../index.html#about">About</a>
+        <a href="mailto:emilydtwiddy@gmail.com?subject=Hey Emily — let's connect">Email</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+
+    // Scroll fade-up
+    const observer = new IntersectionObserver(
+      entries => entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      }),
+      { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
+    );
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // Nav scroll border + hamburger
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 10); }, { passive: true });
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => { hamburger.classList.toggle('open'); mobileMenu.classList.toggle('open'); });
+    document.querySelectorAll('.mobile-link').forEach(link => link.addEventListener('click', () => { hamburger.classList.remove('open'); mobileMenu.classList.remove('open'); }));
+  </script>
+
+  <!-- ─── Cursor glow ──────────────────────────────────────────── -->
+  <div class="cursor-glow" id="cursorGlow"></div>
+  <script>
+    const glow = document.getElementById('cursorGlow');
+    let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+    let cx = mx, cy = my;
+    window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+    (function animate() {
+      cx += (mx - cx) * 0.08;
+      cy += (my - cy) * 0.08;
+      glow.style.transform = `translate(${cx - 300}px, ${cy - 300}px)`;
+      requestAnimationFrame(animate);
+    })();
+  </script>
+
+</body>
+</html>
