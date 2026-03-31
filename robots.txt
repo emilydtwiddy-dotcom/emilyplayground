@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://www.emilytwiddy.com/sitemap.xml
+Sitemap: https://emilytwiddy.com/sitemap.xml
