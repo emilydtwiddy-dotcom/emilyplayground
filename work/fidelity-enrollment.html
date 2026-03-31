@@ -133,19 +133,49 @@
     .cs-hero-stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 0;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-card);
-      overflow: hidden;
+      gap: 12px;
+      margin-top: 4px;
     }
     @media (max-width: 640px) { .cs-hero-stats { grid-template-columns: 1fr 1fr; } }
-    .cs-stat { padding: 24px 28px; border-right: 1px solid var(--border); }
-    .cs-stat:last-child { border-right: none; }
-    @media (max-width: 640px) {
-      .cs-stat:nth-child(even) { border-right: none; }
-      .cs-stat:nth-child(1), .cs-stat:nth-child(2) { border-bottom: 1px solid var(--border); }
+    .cs-stat {
+      padding: 24px 24px 22px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.25s cubic-bezier(0.16,1,0.3,1), box-shadow 0.25s ease;
+      cursor: default;
     }
-    .cs-stat-num { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 500; letter-spacing: -0.03em; margin-bottom: 4px; }
+    .cs-stat:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(28,27,25,0.08);
+    }
+    /* colored top accent bar */
+    .cs-stat::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--stat-color, var(--border));
+      border-radius: 12px 12px 0 0;
+    }
+    .cs-stat[data-color="a"]  { --stat-color: #c4a87a; }
+    .cs-stat[data-color="b"]  { --stat-color: #7ab8a0; }
+    .cs-stat[data-color="c"]  { --stat-color: #9b8ec4; }
+    .cs-stat[data-color="d"]  { --stat-color: #c47a7a; }
+
+    .cs-stat-phase {
+      font-size: 10px; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--stat-color, var(--ink-3));
+      margin-bottom: 10px; display: block;
+    }
+    .cs-stat-num {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      font-weight: 400; letter-spacing: -0.03em;
+      line-height: 1; margin-bottom: 8px;
+      color: var(--ink);
+    }
     .cs-stat-label { font-size: 0.8125rem; color: var(--ink-3); line-height: 1.4; }
 
     /* ─── Chapter heading ────────────────────────────────────── */
@@ -589,20 +619,24 @@
       <p class="body-lg cs-hero-sub">After Fidelity Investments lost its automated loan verification partner to legislative changes, I redesigned the Student Debt Retirement enrollment flow from the ground up — guiding users to the right documents, extracting data automatically, and providing real-time feedback in-flow.</p>
 
       <div class="cs-hero-stats">
-        <div class="cs-stat">
-          <p class="cs-stat-num">60%</p>
+        <div class="cs-stat" data-color="a">
+          <span class="cs-stat-phase">Phase 01 – 03</span>
+          <p class="cs-stat-num" data-count="60" data-suffix="%">60%</p>
           <p class="cs-stat-label">increase in loan auto-verification rates</p>
         </div>
-        <div class="cs-stat">
-          <p class="cs-stat-num">30%</p>
+        <div class="cs-stat" data-color="b">
+          <span class="cs-stat-phase">Phase 01 – 03</span>
+          <p class="cs-stat-num" data-count="30" data-suffix="%">30%</p>
           <p class="cs-stat-label">increase in enrollment success rates</p>
         </div>
-        <div class="cs-stat">
-          <p class="cs-stat-num">5 days</p>
+        <div class="cs-stat" data-color="c">
+          <span class="cs-stat-phase">Phase 03</span>
+          <p class="cs-stat-num" data-count="5" data-suffix=" days">5 days</p>
           <p class="cs-stat-label">manual ops review eliminated for most users</p>
         </div>
-        <div class="cs-stat">
-          <p class="cs-stat-num">0</p>
+        <div class="cs-stat" data-color="d">
+          <span class="cs-stat-phase">Phase 02</span>
+          <p class="cs-stat-num" data-count="0" data-suffix="">0</p>
           <p class="cs-stat-label">loan servicer name typos after Phase 2</p>
         </div>
       </div>
@@ -1042,6 +1076,35 @@
       document.getElementById('solPrev').addEventListener('click', () => goTo(current - 1));
       document.getElementById('solNext').addEventListener('click', () => goTo(current + 1));
       tabs.forEach(tab => tab.addEventListener('click', () => goTo(+tab.dataset.idx)));
+    })();
+  </script>
+
+  <!-- ─── Stat count-up ───────────────────────────────────────── -->
+  <script>
+    (function() {
+      const stats = document.querySelectorAll('.cs-stat-num[data-count]');
+      let fired = false;
+      function countUp() {
+        if (fired) return;
+        const rect = document.querySelector('.cs-hero-stats').getBoundingClientRect();
+        if (rect.top > window.innerHeight * 0.9) return;
+        fired = true;
+        stats.forEach(el => {
+          const target = +el.dataset.count;
+          const suffix = el.dataset.suffix || '';
+          const duration = 900;
+          const start = performance.now();
+          function tick(now) {
+            const p = Math.min((now - start) / duration, 1);
+            const ease = 1 - Math.pow(1 - p, 3);
+            el.textContent = Math.round(ease * target) + suffix;
+            if (p < 1) requestAnimationFrame(tick);
+          }
+          requestAnimationFrame(tick);
+        });
+      }
+      window.addEventListener('scroll', countUp, { passive: true });
+      countUp();
     })();
   </script>
 
