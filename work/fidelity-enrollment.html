@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Benefit Enrollment Redesign — Emily Twiddy</title>
   <meta name="description" content="How I redesigned Fidelity Investments' student debt benefit enrollment flow, lifting auto-verification by 60% and enrollment success by 30%." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet" />
 
   <style>
     :root {
@@ -36,7 +39,7 @@
       letter-spacing: 0.1em; text-transform: uppercase;
       color: var(--ink-3);
     }
-    .h1 { font-size: clamp(2rem, 4.5vw, 3.2rem); font-weight: 500; letter-spacing: -0.03em; line-height: 1.12; }
+    .h1 { font-family: 'Fraunces', Georgia, serif; font-size: clamp(2rem, 4.5vw, 3.2rem); font-weight: 400; letter-spacing: -0.03em; line-height: 1.12; }
     .h2 { font-size: clamp(1.4rem, 2.5vw, 2rem); font-weight: 500; letter-spacing: -0.025em; line-height: 1.2; }
     .h3 { font-size: 1.0625rem; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 10px; }
     .body-lg { font-size: 1.0625rem; color: var(--ink-2); line-height: 1.75; }
@@ -151,9 +154,10 @@
       border-top: 1px solid var(--border);
     }
     .chapter-title {
+      font-family: 'Fraunces', Georgia, serif;
       font-size: clamp(2.4rem, 6vw, 5rem);
-      font-weight: 500;
-      letter-spacing: -0.04em;
+      font-weight: 400;
+      letter-spacing: -0.03em;
       line-height: 1.05;
       color: var(--ink);
       padding-bottom: 48px;
@@ -418,22 +422,70 @@
     /* ─── Scroll animation ───────────────────────────────────── */
     .fade-up { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
     .fade-up.visible { opacity: 1; transform: none; }
+
+    /* ─── Scroll progress bar ────────────────────────────────── */
+    .scroll-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      width: 0%;
+      background: var(--ink);
+      z-index: 200;
+      transition: width 0.1s linear;
+    }
+
+    /* ─── Gradual fade ────────────────────────────────────────── */
+    .gradual-blur {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 80px;
+      pointer-events: none;
+      z-index: 100;
+      background: linear-gradient(to top, var(--bg) 0%, transparent 100%);
+      transition: opacity 0.3s ease;
+    }
+    .gradual-blur.hidden { opacity: 0; }
+
     /* ─── Cursor glow ────────────────────────────────────────── */
     .cursor-glow {
       pointer-events: none;
       position: fixed;
       top: 0; left: 0;
-      width: 600px; height: 600px;
+      width: 280px; height: 280px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(180,160,130,0.12) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(180,160,130,0.38) 0%, transparent 70%);
       transform: translate(-50%, -50%);
-      z-index: 0;
+      z-index: 9999;
       transition: opacity 0.3s ease;
       will-change: transform;
+    }
+
+    /* ─── Tradeoff card ──────────────────────────────────────── */
+    .tradeoff-card {
+      border-left: 3px solid #c4a87a;
+      background: #fdf7ed;
+      border-radius: 0 12px 12px 0;
+      padding: 20px 24px;
+      margin: 32px 0;
+    }
+    .tradeoff-label {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: #9a7a4a; margin-bottom: 8px;
+    }
+    .tradeoff-body {
+      font-size: 0.9375rem; color: var(--ink-2); line-height: 1.7;
     }
   </style>
 </head>
 <body>
+
+  <!-- ─── Gradual blur overlay ──────────────────────────────────── -->
+  <div class="gradual-blur" aria-hidden="true"></div>
+
+  <!-- ─── Scroll progress ───────────────────────────────────────── -->
+  <div class="scroll-progress" id="scrollProgress"></div>
 
   <!-- ─── Nav ─────────────────────────────────────────────────── -->
   <nav class="nav" id="nav">
@@ -891,17 +943,45 @@
     document.querySelectorAll('.mobile-link').forEach(link => link.addEventListener('click', () => { hamburger.classList.remove('open'); mobileMenu.classList.remove('open'); }));
   </script>
 
+  <!-- ─── Scroll progress + blur hide ─────────────────────────── -->
+  <script>
+    const progressBar = document.getElementById('scrollProgress');
+    window.addEventListener('scroll', () => {
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      progressBar.style.width = (window.scrollY / total * 100) + '%';
+    }, { passive: true });
+
+    const blurEl = document.querySelector('.gradual-blur');
+    const footerEl = document.querySelector('.footer');
+    if (blurEl && footerEl) {
+      const obs = new IntersectionObserver(([e]) => {
+        blurEl.classList.toggle('hidden', e.isIntersecting);
+      }, { threshold: 0.01 });
+      obs.observe(footerEl);
+    }
+  </script>
+
   <!-- ─── Cursor glow ──────────────────────────────────────────── -->
   <div class="cursor-glow" id="cursorGlow"></div>
   <script>
     const glow = document.getElementById('cursorGlow');
+    const glowColors = ['242,172,132','140,180,145','180,155,210','210,175,140'];
     let mx = window.innerWidth / 2, my = window.innerHeight / 2;
     let cx = mx, cy = my;
     window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
     (function animate() {
       cx += (mx - cx) * 0.08;
       cy += (my - cy) * 0.08;
-      glow.style.transform = `translate(${cx - 300}px, ${cy - 300}px)`;
+      const t = cx / window.innerWidth * (glowColors.length - 1);
+      const i = Math.floor(t);
+      const f = t - i;
+      const a = glowColors[Math.min(i, glowColors.length - 1)].split(',').map(Number);
+      const b = glowColors[Math.min(i + 1, glowColors.length - 1)].split(',').map(Number);
+      const r = Math.round(a[0] + (b[0] - a[0]) * f);
+      const g = Math.round(a[1] + (b[1] - a[1]) * f);
+      const bl = Math.round(a[2] + (b[2] - a[2]) * f);
+      glow.style.background = `radial-gradient(circle, rgba(${r},${g},${bl},0.38) 0%, transparent 70%)`;
+      glow.style.transform = `translate(${cx - 140}px, ${cy - 140}px)`;
       requestAnimationFrame(animate);
     })();
   </script>
