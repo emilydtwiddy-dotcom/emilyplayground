@@ -161,7 +161,6 @@
       line-height: 1.05;
       color: var(--ink);
       padding-bottom: 48px;
-      border-bottom: 1px solid var(--border);
     }
 
     /* ─── Numbered section cards ─────────────────────────────── */
@@ -287,7 +286,6 @@
 
     /* ─── Phase cards (stacked, large video) ─────────────────── */
     .solutions-section {
-      border-top: 1px solid var(--border);
     }
     .phase-card-full {
       border-bottom: 1px solid var(--border);
@@ -474,10 +472,10 @@
     }
 
     /* ─── Solution carousel ──────────────────────────────────── */
-    .solutions-section { border-top: 1px solid var(--border); }
+    .solutions-section { }
     .sol-header {
       display: flex; justify-content: space-between; align-items: flex-end;
-      padding-top: 32px; border-bottom: 1px solid var(--border);
+      padding-top: 32px;
     }
     .sol-tabs { display: flex; gap: 0; }
     .sol-tab {
@@ -621,7 +619,7 @@
   <!-- 01 The Problem -->
   <div class="section-cards">
     <div class="section-card fade-up">
-      <div class="container">
+      <div class="container" style="grid-template-columns: 1fr;">
         <div class="section-card-inner">
           <div class="section-card-num">01</div>
           <div class="section-card-body">
@@ -630,19 +628,15 @@
             <p>This created three critical issues: participants abandoned enrollment instead of returning to resolve issues, the resolution process was confusing and outdated, and manual reviews drove up operational costs significantly.</p>
           </div>
         </div>
-        <div class="step-visual">
-          <img src="../SDR Enrollment Media/theproblem-image.png" alt="The Problem visual" />
-        </div>
       </div>
     </div>
   </div>
 
   <!-- Problem flow diagram -->
-  <div class="media-block fade-up">
+  <div class="media-block fade-up" style="border-bottom: none;">
     <div class="container">
-      <div class="media-block-inner">
-        <img src="../Workplace%20benefit%20enrollment/SDR-Problem-1.gif" alt="Problem flow: Loss of data aggregation → Increasing operations cost → Users can't find right documents → Losing enrollees to 5-day SLA" />
-        <p class="media-block-caption">Root issue and friction cascade — from data partner loss to enrollment abandonment</p>
+      <div class="media-block-inner" style="background: transparent; border: none; box-shadow: none; border-radius: 0; padding: 0;">
+        <img src="../SDR Enrollment Media/theproblem-image.png" alt="The Problem visual" style="width:100%;display:block;" />
       </div>
     </div>
   </div>
@@ -650,7 +644,7 @@
   <!-- 02 The Challenge -->
   <div class="section-cards">
     <div class="section-card fade-up">
-      <div class="container">
+      <div class="container" style="border-top: 1px solid var(--border); padding-top: 40px;">
         <div class="section-card-inner">
           <div class="section-card-num">02</div>
           <div class="section-card-body">
@@ -659,8 +653,8 @@
             <p>But clients were also vocal about enrolling the <em>right</em> participants. The solution needed to guide users to correct documents, extract loan data automatically, and provide real-time feedback — all while getting to market quickly to meet key enrollment KPIs.</p>
           </div>
         </div>
-        <div class="step-visual">
-          <img src="../SDR Enrollment Media/thechallenge-image.png" alt="The Challenge visual" />
+        <div class="step-visual" style="border: none; background: transparent; display: flex; align-items: center; justify-content: center;">
+          <img src="../SDR Enrollment Media/thechallenge-image.png" alt="The Challenge visual" style="max-width: 100%; width: 100%; height: auto; object-fit: contain;" />
         </div>
       </div>
     </div>
@@ -679,7 +673,7 @@
 
     <!-- 03 Alignment & Strategy -->
     <div class="section-card fade-up">
-      <div class="container">
+      <div class="container" style="grid-template-columns: 1fr;">
         <div class="section-card-inner">
           <div class="section-card-num">03</div>
           <div class="section-card-body">
@@ -688,16 +682,12 @@
             <p>Frequent touchpoints with technology and business partners kept momentum. Given the fast-moving environment, I ran a high-intensity discovery phase — auditing existing work, reviewing the competitive landscape, and exploring technical feasibility — simultaneously.</p>
           </div>
         </div>
-        <div class="step-visual">
-          <img src="" alt="Alignment and Strategy visual" />
-          <div class="step-visual-placeholder">Image coming soon</div>
-        </div>
       </div>
     </div>
 
     <!-- 04 Our Goals -->
     <div class="section-card fade-up">
-      <div class="container">
+      <div class="container" style="grid-template-columns: 1fr;">
         <div class="section-card-inner">
           <div class="section-card-num">04</div>
           <div class="section-card-body">
@@ -709,20 +699,16 @@
             </div>
           </div>
         </div>
-        <div class="step-visual">
-          <img src="../SDR Enrollment Media/ourgoals-image.png" alt="Our Goals visual" />
-        </div>
       </div>
     </div>
 
   </div>
 
-  <!-- Strategy / vision diagram -->
-  <div class="media-block fade-up">
+  <!-- Our Goals image -->
+  <div class="media-block fade-up" style="border-bottom: none;">
     <div class="container">
-      <div class="media-block-inner">
-        <img src="../Workplace%20benefit%20enrollment/SDR-Vision-2.gif" alt="Phased strategy diagram — Phase 1 through 3 and the design maturity pyramid" />
-        <p class="media-block-caption">Phased experience strategy — from upfront guidance through real-time feedback loop</p>
+      <div class="media-block-inner" style="background: transparent; border: none; box-shadow: none; border-radius: 0; padding: 0;">
+        <img src="../SDR Enrollment Media/ourgoals-image.png" alt="Our Goals visual" style="width:100%;display:block;" />
       </div>
     </div>
   </div>
@@ -731,7 +717,7 @@
 
     <!-- 05 Research & Analysis -->
     <div class="section-card fade-up">
-      <div class="container">
+      <div class="container" style="grid-template-columns: 1fr; border-top: 1px solid var(--border); padding-top: 40px;">
         <div class="section-card-inner">
           <div class="section-card-num">05</div>
           <div class="section-card-body">
@@ -745,20 +731,16 @@
             </div>
           </div>
         </div>
-        <div class="step-visual">
-          <img src="../SDR Enrollment Media/researchandanalysis-image.png" alt="Research and Analysis visual" />
-        </div>
       </div>
     </div>
 
   </div>
 
   <!-- Research analysis diagram -->
-  <div class="media-block fade-up">
+  <div class="media-block fade-up" style="border-bottom: none;">
     <div class="container">
-      <div class="media-block-inner">
-        <img src="../Workplace%20benefit%20enrollment/SDR-Strategy-1.gif" alt="Research mapping: pain points, opportunities, and insights across benefit comprehension, loan verification, and finding loan documentation" />
-        <p class="media-block-caption">Mapping of pain points, opportunities, and insights from research phase</p>
+      <div class="media-block-inner" style="background: transparent; border: none; box-shadow: none; border-radius: 0; padding: 0;">
+        <img src="../SDR Enrollment Media/researchandanalysis-image.png" alt="Research mapping: pain points, opportunities, and insights across benefit comprehension, loan verification, and finding loan documentation" style="width:100%;display:block;" />
       </div>
     </div>
   </div>
@@ -767,7 +749,7 @@
 
     <!-- 06 Vision -->
     <div class="section-card fade-up">
-      <div class="container">
+      <div class="container" style="grid-template-columns: 1fr; border-top: 1px solid var(--border); padding-top: 40px;">
         <div class="section-card-inner">
           <div class="section-card-num">06</div>
           <div class="section-card-body">
@@ -776,20 +758,16 @@
             <p>Our vision was to guide users to correct documentation and provide immediate feedback when loan verification failed, while displaying extracted data to eliminate manual entry.</p>
           </div>
         </div>
-        <div class="step-visual">
-          <img src="../SDR Enrollment Media/vision-image.png" alt="Vision visual" />
-        </div>
       </div>
     </div>
 
   </div>
 
-  <!-- Enrollment flow animation -->
+  <!-- Vision image -->
   <div class="media-block fade-up">
     <div class="container">
-      <div class="media-block-inner">
-        <img src="../Workplace%20benefit%20enrollment/SDR-Enrollment-Scale-01.gif" alt="Enrollment scale and flow overview" />
-        <p class="media-block-caption">Enrollment experience overview — the full flow at scale</p>
+      <div class="media-block-inner" style="background: transparent; border: none; box-shadow: none; border-radius: 0; padding: 0;">
+        <img src="../SDR Enrollment Media/vision-image.png" alt="Vision visual" style="width:100%;display:block;" />
       </div>
     </div>
   </div>
@@ -797,13 +775,13 @@
   <!-- ═══════════════════════════════════════════════════════════ -->
   <!-- CHAPTER: Key Solutions                                     -->
   <!-- ═══════════════════════════════════════════════════════════ -->
-  <div class="chapter">
+  <div class="chapter" style="border-top: none;">
     <div class="container">
       <h2 class="chapter-title">Key solutions</h2>
     </div>
   </div>
 
-  <div class="solutions-section">
+  <div class="solutions-section" style="border-top: none;">
     <div class="container">
 
       <!-- Tab nav + arrows -->
